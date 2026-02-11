@@ -1,79 +1,54 @@
-# TaskFlow
+# TareasZen
 
-Eine einfache, lokale Task-Management-App mit Labels, Prioritäten und Drag & Drop.
+A local task management app built with Tauri and React. No cloud, no accounts, your data stays on your machine.
 
-## Features
+## What it does
 
-- 📋 Tasks mit Titel, Beschreibung, Priorität, Fälligkeitsdatum und Erinnerung
-- 🏷️ Labels für Projekte und Themenbereiche (viele-zu-viele Beziehung)
-- 🔀 Drag & Drop zum Sortieren
-- 🔍 Filter nach Label, Priorität und Status
-- 📊 Sortierung nach Position, Priorität, Erstellungsdatum oder Fälligkeitsdatum
-- 💾 Lokale SQLite-Datenbank (keine Cloud, keine Server)
-- 🖥️ Läuft auf Linux und Windows
+Create tasks with title, description, priority, due date and reminders. Organize them with labels (a task can have multiple labels). Filter and sort by what matters. Get notified about overdue tasks and reminders when you open the app.
 
-## Voraussetzungen
+Automatic backups can be configured to run in the background.
 
-- [Rust](https://rustup.rs/) (1.70+)
-- [Node.js](https://nodejs.org/) (18+)
-- Linux: `sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev`
-- Windows: WebView2 (meist vorinstalliert)
+## Tech Stack
 
-## Installation & Start
+Rust backend with SQLite database. React/TypeScript frontend. Packaged as a native desktop app via Tauri.
+
+Runs on Linux and Windows.
+
+## Building from source
+
+You'll need Rust, Node.js, and some system dependencies. See SETUP.md for detailed instructions per platform.
+
+Quick start:
 
 ```bash
-# Dependencies installieren
 npm install
-
-# Development-Modus starten
 npm run tauri dev
+```
 
-# Production Build erstellen
+Production build:
+
+```bash
 npm run tauri build
 ```
 
-## Projektstruktur
+The binary ends up in `src-tauri/target/release/`.
+
+## Project structure
 
 ```
-taskflow/
-├── src/                    # React Frontend
-│   ├── components/         # UI Komponenten
-│   ├── api.ts              # Tauri API Aufrufe
-│   ├── types.ts            # TypeScript Typen
-│   ├── App.tsx             # Hauptkomponente
-│   └── styles.css          # Styling
-├── src-tauri/              # Rust Backend
-│   ├── src/
-│   │   ├── main.rs         # Tauri Commands
-│   │   └── database.rs     # SQLite Operationen
-│   └── Cargo.toml          # Rust Dependencies
-└── package.json
+src/                    React frontend
+src-tauri/src/          Rust backend
+  database.rs           SQLite operations
+  main.rs               Tauri commands
 ```
 
-## Datenbank-Schema
+## Database
 
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   tasks     │     │ task_labels  │     │   labels    │
-├─────────────┤     ├──────────────┤     ├─────────────┤
-│ id          │────<│ task_id      │     │ id          │
-│ title       │     │ label_id     │>────│ name        │
-│ description │     └──────────────┘     │ color       │
-│ priority    │                          │ created_at  │
-│ created_at  │                          └─────────────┘
-│ due_date    │
-│ reminder    │
-│ completed   │
-│ position    │
-└─────────────┘
-```
+SQLite file stored in your local app data folder:
 
-## Tastenkürzel (geplant)
+- Linux: `~/.local/share/tareaszen/`
+- Windows: `%LOCALAPPDATA%\tareaszen\`
 
-- `Ctrl+N` - Neuer Task
-- `Ctrl+L` - Labels verwalten
-- `Escape` - Modal schließen
-
-## Lizenz
+## License
 
 MIT
