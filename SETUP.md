@@ -1,9 +1,8 @@
-# TaskFlow – Setup Guide
+# TareasZen – Setup Guide
 
 ## Arch Linux
 
-### 1. System-Dependencies installieren
-
+### 1. Install System Dependencies
 ```bash
 sudo pacman -S --needed \
     webkit2gtk-4.1 \
@@ -17,67 +16,57 @@ sudo pacman -S --needed \
     librsvg
 ```
 
-### 2. Rust installieren (falls nicht vorhanden)
-
+### 2. Install Rust (if not already installed)
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source ~/.cargo/env
 ```
 
-Rust-Version prüfen:
-
+Check Rust version:
 ```bash
-rustc --version  # sollte 1.70+ sein
+rustc --version  # should be 1.70+
 ```
 
-### 3. Node.js installieren (falls nicht vorhanden)
-
+### 3. Install Node.js (if not already installed)
 ```bash
 sudo pacman -S nodejs npm
 ```
 
-Oder via nvm:
-
+Check version:
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc
-nvm install 20
-```
-
-Version prüfen:
-
-```bash
-node --version  # sollte 18+ sein
+node --version  # should be 18+
 npm --version
 ```
 
-### 4. Projekt bauen
+### 4. Install emoji fonts (important for icons)
+```
+sudo pacman -S noto-fonts-emoji
+```
 
+### 5. Build the Project
 ```bash
-cd taskflow
+cd tareaszen
 
-# Frontend-Dependencies installieren
+# Install frontend dependencies
 npm install
 
-# Development-Modus (mit Hot Reload)
+# Development mode (with Hot Reload)
 npm run tauri dev
 
-# Production Build
+# Production build
 npm run tauri build
 ```
 
-Die fertige Binary liegt nach dem Build unter:
-
+After building, the final binary will be located at:
 ```
-src-tauri/target/release/taskflow
+src-tauri/target/release/tareaszen
 ```
 
 ---
 
 ## Debian/Ubuntu
 
-### 1. System-Dependencies
-
+### 1. System Dependencies
 ```bash
 sudo apt update
 sudo apt install -y \
@@ -94,42 +83,39 @@ sudo apt install -y \
 
 ### 2. Rust & Node.js
 
-Gleich wie bei Arch (siehe oben).
+Same as for Arch (see above).
 
 ---
 
 ## Windows
 
-### 1. Voraussetzungen
+### 1. Prerequisites
 
-- WebView2: Bereits vorinstalliert auf Windows 10/11
+- WebView2: Already pre-installed on Windows 10/11
 - Visual Studio Build Tools: [Download](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
-  - Workload "Desktop development with C++" auswählen
+  - Select workload "Desktop development with C++"
 
-### 2. Rust installieren
+### 2. Install Rust
 
-[rustup-init.exe](https://rustup.rs/) herunterladen und ausführen.
+Download and run [rustup-init.exe](https://rustup.rs/).
 
-### 3. Node.js installieren
+### 3. Install Node.js
 
-[Node.js LTS](https://nodejs.org/) herunterladen und installieren.
+Download and install [Node.js LTS](https://nodejs.org/).
 
-### 4. Projekt bauen
-
+### 4. Build the Project
 ```powershell
-cd taskflow
+cd tareaszen
 npm install
 npm run tauri dev
 ```
 
-Falls Powershell mozt:
-
+If PowerShell complains:
 ```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-Cache löschen, falls nötig
-
+Clear cache if needed:
 ```
 cd src-tauri
 cargo clean
@@ -137,7 +123,7 @@ cd ..
 npm run tauri dev
 ```
 
-Falls das nicht reicht, auch den Frontend-Cache löschen:
+If that's not enough, also clear the frontend cache:
 ```
 rm -r node_modules/.vite
 ```
@@ -146,29 +132,27 @@ rm -r node_modules/.vite
 
 ## Troubleshooting
 
-**Fehler: `webkit2gtk-4.1` nicht gefunden**
+**Error: `webkit2gtk-4.1` not found**
 
 Arch: `sudo pacman -S webkit2gtk-4.1`
 
-**Fehler: `cargo` nicht gefunden**
-
+**Error: `cargo` not found**
 ```bash
 source ~/.cargo/env
 ```
 
-Oder Terminal neu öffnen.
+Or open a new terminal.
 
-**Fehler: Node-Module Probleme**
-
+**Error: Node module issues**
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-**Erster Build dauert lange**
+**First build takes a long time**
 
-Normal. Rust kompiliert alle Dependencies beim ersten Mal (~3-5 Minuten). Danach inkrementell und schnell.
+Normal. Rust compiles all dependencies the first time (~3-5 minutes). After that, incremental and fast.
 
-**DB Pfad**
+**DB Path**
 
 %LOCALAPPDATA%\tareaszen\tareaszen.db
