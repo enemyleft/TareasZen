@@ -18,6 +18,10 @@ export async function createTask(
   });
 }
 
+export async function getPlatform(): Promise<String> {
+  return await invoke("get_platform");
+}
+
 export async function getAllTasks(): Promise<TaskWithLabels[]> {
   return await invoke("get_all_tasks");
 }

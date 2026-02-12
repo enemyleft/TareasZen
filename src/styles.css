@@ -180,10 +180,10 @@ body {
 
 .filter-group select {
   padding: 6px 12px;
-  background: var(--bg-tertiary);
+  /*background: var(--bg-tertiary);*/
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  color: var(--text-primary);
+  /*color: var(--text-primary);*/
   font-size: 0.85rem;
   cursor: pointer;
 }
@@ -518,14 +518,22 @@ body {
 }
 
 .form-group input,
-.form-group textarea,
-.form-group select {
+.form-group textarea {
   width: 100%;
   padding: 10px 12px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition);  
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
   transition: border-color var(--transition);
 }
@@ -806,7 +814,17 @@ body {
   word-break: break-all;
 }
 
-select option {
-  background: #1a1a1a;
-  color: #f5f5f5;
+/* Linux: native GTK-Selects are looking bad, they cannot apply background color! 
+   So this is the simpler workaround. If at some point we really want it dark, 
+   we have to make a custom component.
+*/
+.os-linux select {
+  color: #0f0f0f;
 }
+
+/* Windows: WebView2 can apply background css */
+.os-windows select {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+

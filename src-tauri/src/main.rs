@@ -13,6 +13,12 @@ struct AppState {
     db: Database,
 }
 
+// Get OS Info 
+#[tauri::command]
+fn get_platform() -> Result<String, String> {
+    Ok(std::env::consts::OS.to_string())
+}
+
 // Task commands
 #[tauri::command]
 fn create_task(
@@ -168,6 +174,7 @@ fn main() {
     tauri::Builder::default()
         .manage(Mutex::new(AppState { db }))
         .invoke_handler(tauri::generate_handler![
+            get_platform,
             create_task,
             get_all_tasks,
             update_task,

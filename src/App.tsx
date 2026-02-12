@@ -49,6 +49,11 @@ function App() {
 
   const loadData = useCallback(async () => {
 
+    // get os information and store in dom. (windows/linux) this way
+    // we can apply different css styles for the platforms if necessary
+    const os = await api.getPlatform();
+    document.documentElement.classList.add(`os-${os}`);
+
     try {
       const [tasksData, labelsData] = await Promise.all([
         api.getAllTasks(),
