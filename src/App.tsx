@@ -42,6 +42,8 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [overdueTasks, setOverdueTasks] = useState<TaskWithLabels[]>([]);
   const [reminderTasks, setReminderTasks] = useState<TaskWithLabels[]>([]);
+  const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString()
+);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -122,6 +124,33 @@ function App() {
     };
     loadNotifications();
   }, []);
+
+  // Check for notifications periodically (for overnight running)
+  useEffect(() => {
+    const checkNotifications = async () => {
+      const now = new Date();
+      const today = now.toDateString();
+      const hour = now.getHours();
+
+      // New day and past 5 AM?
+      if (today !== lastNotificationDate && hour >= 5) {
+        try {
+          const [overdue, reminders] = await api.getNotificationTasks();
+          if (overdue.length > 0 || reminders.length > 0) {
+            setOverdueTasks(overdue);
+            setReminderTasks(reminders);
+            setShowStartupNotification(true);
+            setLastNotificationDate(today);
+          }
+        } catch (error) {
+          console.error("Failed to check notifications:", error);
+        }
+      }
+    };
+
+    const interval = setInterval(checkNotifications, 30 * 60 * 1000); // 30 minutes
+    return () => clearInterval(interval);
+  }, [lastNotificationDate]);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
