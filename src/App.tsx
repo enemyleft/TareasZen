@@ -236,6 +236,10 @@ function App() {
   };
 
   const handleDeleteTask = async (taskId: string) => {
+    const confirmed = await api.confirmDialog("Delete this task?");
+    if (!confirmed) {
+      return;
+    }
     try {
       await api.deleteTask(taskId);
       await loadTasks();
@@ -436,7 +440,7 @@ function App() {
         <LabelManager
           labels={labels}
           onClose={() => setShowLabelManager(false)}
-          onRefresh={loadTasks}
+          onRefresh={() => { loadTasks(); loadLabels(); }}
         />
       )}
       {showSettings && (

@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import { confirm } from "@tauri-apps/api/dialog";
 import { Task, Label, TaskWithLabels, TaskFilter } from "./types";
 
 // Task API
@@ -95,4 +96,8 @@ export async function checkAndRunBackup(): Promise<string | null> {
 
 export async function getNotificationTasks(): Promise<[TaskWithLabels[], TaskWithLabels[]]> {
   return await invoke("get_notification_tasks");
+}
+
+export async function confirmDialog(message: string): Promise<boolean> {
+  return await confirm(message, { title: "TareasZen", type: "warning" });
 }

@@ -45,7 +45,9 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
   };
 
   const handleDeleteLabel = async (labelId: string) => {
-    if (!confirm("Label wirklich löschen? Tasks behalten ihre anderen Labels.")) {
+
+    const confirmed = await api.confirmDialog("Really want to delete the label?");
+    if (!confirmed) {
       return;
     }
 
