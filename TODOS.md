@@ -1,3 +1,9 @@
+
+# Notification:
+
+1. nur die ersten 1000 werden berücksichtigt, hier entweder schauen/prüfen, dass die filter wirklich korrekt sind, oder separates select dafür -> eventuell besser.
+2. Wenn die App über nach laufen bleibt gibts am nächsten morgen/tag noch keine Notification!
+
 # Position issue:
 
 derzeit gibts eine position die geändert werden kann. aber da ein task innerhalb mehrerer labels sein kann müsste das wohl theoretisch eine position je label geben.

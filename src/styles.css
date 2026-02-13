@@ -814,6 +814,33 @@ body {
   word-break: break-all;
 }
 
+/* Header actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-box input {
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  width: 250px;
+  transition: border-color var(--transition);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
 /* Linux: native GTK-Selects are looking bad, they cannot apply background color! 
    So this is the simpler workaround. If at some point we really want it dark, 
    we have to make a custom component.

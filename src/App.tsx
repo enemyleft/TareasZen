@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { TaskWithLabels, Label, ViewMode, SortBy, SortOrder } from "./types";
+import { TaskWithLabels, Label, ViewMode, SortBy, SortOrder, TaskFilter } from "./types";
 import * as api from "./api";
 import { TaskCard } from "./components/TaskCard";
 import { TaskForm } from "./components/TaskForm";
@@ -33,7 +33,8 @@ function App() {
   const [sortBy, setSortBy] = useState<SortBy>("position");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [filterPriority, setFilterPriority] = useState<number | null>(null);
-  const [showCompleted, setShowCompleted] = useState(true);
+  const [showCompleted, setShowCompleted] = useState<boolean | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskWithLabels | null>(null);
   const [showLabelManager, setShowLabelManager] = useState(false);
@@ -47,24 +48,76 @@ function App() {
     })
   );
 
+  const loadTasks = useCallback(async () => {
+    try {
+      const filter: TaskFilter = {
+        label_id: selectedLabelId,
+        priority: filterPriority,
+        completed: showCompleted,
+        search: searchTerm.trim() || null,
+        sort_by: sortBy === "position" ? "created_at" : sortBy,
+        sort_order: sortOrder,
+        limit: 1000,
+      };
+      const tasksData = await api.getTasks(filter);
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Failed to load tasks:", error);
+    }
+  }, [selectedLabelId, filterPriority, showCompleted, searchTerm, sortBy, sortOrder]);
+
+  const loadLabels = useCallback(async () => {
+    try {
+      const labelsData = await api.getAllLabels();
+      setLabels(labelsData);
+    } catch (error) {
+      console.error("Failed to load labels:", error);
+    }
+  }, []);
+
+  // Load labels once on mount
+  useEffect(() => {
+    loadLabels();
+  }, [loadLabels]);
+
+  // Load tasks when filters change
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
+  // Check backup and set OS class on initial load
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const os = await api.getPlatform();
+        document.documentElement.classList.add(`os-${os}`);
+      } catch (e) {
+        console.error("Failed to get platform:", e);
+      }
+
+      try {
+        const backupResult = await api.checkAndRunBackup();
+        if (backupResult) {
+          console.log("Automatic backup created:", backupResult);
+        }
+      } catch (e) {
+        console.error("Backup check failed:", e);
+      }
+    };
+    init();
+  }, []);
+
+  /*
+  // TODO: REMOVE
   const loadData = useCallback(async () => {
+    await Promise.all([loadTasks(), loadLabels()]);
 
     // get os information and store in dom. (windows/linux) this way
     // we can apply different css styles for the platforms if necessary
     const os = await api.getPlatform();
     document.documentElement.classList.add(`os-${os}`);
 
-    try {
-      const [tasksData, labelsData] = await Promise.all([
-        api.getAllTasks(),
-        api.getAllLabels(),
-      ]);
-      setTasks(tasksData);
-      setLabels(labelsData);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
-
+      //TODO: TWICE?
     // Check for automatic backup
     try {
       const backupResult = await api.checkAndRunBackup();
@@ -75,11 +128,29 @@ function App() {
       console.error("Backup check failed:", e);
     }
 
-  }, []);
+    // TODO: WHAT IS USE EFFECT? 
+    useEffect(() => {
+      loadLabels();
+    }, [loadLabels]);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+    useEffect(() => {
+      loadTasks();
+    }, [loadTasks]);
+
+    useEffect(() => {
+      // Check backup on initial load only
+      const checkBackup = async () => {
+        try {
+          const backupResult = await api.checkAndRunBackup();
+          if (backupResult) {
+            console.log("Automatic backup created:", backupResult);
+          }
+        } catch (e) {
+          console.error("Backup check failed:", e);
+        }
+      };
+      checkBackup();
+    }, []);*/
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -108,7 +179,7 @@ function App() {
         await api.updateTaskPositions(positions);
       } catch (error) {
         console.error("Failed to update positions:", error);
-        loadData();
+        loadTasks();
       }
     }
   };
@@ -132,7 +203,7 @@ function App() {
       for (const labelId of labelIds) {
         await api.addLabelToTask(newTask.id, labelId);
       }
-      await loadData();
+      await loadTasks();
       setShowTaskForm(false);
     } catch (error) {
       console.error("Failed to create task:", error);
@@ -157,7 +228,7 @@ function App() {
         await api.removeLabelFromTask(taskWithLabels.task.id, labelId);
       }
 
-      await loadData();
+      await loadTasks();
       setEditingTask(null);
     } catch (error) {
       console.error("Failed to update task:", error);
@@ -167,7 +238,7 @@ function App() {
   const handleDeleteTask = async (taskId: string) => {
     try {
       await api.deleteTask(taskId);
-      await loadData();
+      await loadTasks();
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
@@ -182,56 +253,14 @@ function App() {
         completed_at: isCompleting ? new Date().toISOString() : null,
       };
       await api.updateTask(updatedTask);
-      await loadData();
+      await loadTasks();
     } catch (error) {
       console.error("Failed to toggle task:", error);
     }
   };
 
-  // Filter and sort tasks
-  let filteredTasks = [...tasks];
-
-  if (selectedLabelId) {
-    filteredTasks = filteredTasks.filter((t) =>
-      t.labels.some((l) => l.id === selectedLabelId)
-    );
-  }
-
-  if (filterPriority !== null) {
-    filteredTasks = filteredTasks.filter(
-      (t) => t.task.priority === filterPriority
-    );
-  }
-
-  if (!showCompleted) {
-    filteredTasks = filteredTasks.filter((t) => !t.task.completed);
-  }
-
-  filteredTasks.sort((a, b) => {
-    let comparison = 0;
-    switch (sortBy) {
-      case "priority":
-        comparison = b.task.priority - a.task.priority;
-        break;
-      case "created_at":
-        comparison =
-          new Date(a.task.created_at).getTime() -
-          new Date(b.task.created_at).getTime();
-        break;
-      case "due_date":
-        if (!a.task.due_date && !b.task.due_date) comparison = 0;
-        else if (!a.task.due_date) comparison = 1;
-        else if (!b.task.due_date) comparison = -1;
-        else
-          comparison =
-            new Date(a.task.due_date).getTime() -
-            new Date(b.task.due_date).getTime();
-        break;
-      default:
-        comparison = a.task.position - b.task.position;
-    }
-    return sortOrder === "asc" ? comparison : -comparison;
-  });
+  // Tasks are already filtered and sorted by backend
+  const filteredTasks = tasks;
 
   // Group tasks by label for the by-label view
   const tasksByLabel = labels.map((label) => ({
@@ -267,17 +296,28 @@ function App() {
       />
 
       <main className="main-content">
+        
         <header className="header">
           <h1>
             {selectedLabelId
               ? labels.find((l) => l.id === selectedLabelId)?.name
               : viewMode === "by-label"
-              ? "all labels"
-              : "all tasks"}
+              ? "All Labels"
+              : "All Tasks"}
           </h1>
-          <button className="btn-primary" onClick={() => setShowTaskForm(true)}>
-            + new task
-          </button>
+          <div className="header-actions">
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search tasks..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <button className="btn-primary" onClick={() => setShowTaskForm(true)}>
+              + New Task
+            </button>
+          </div>
         </header>
 
         <FilterBar
@@ -409,7 +449,7 @@ function App() {
         <LabelManager
           labels={labels}
           onClose={() => setShowLabelManager(false)}
-          onRefresh={loadData}
+          onRefresh={loadTasks}
         />
       )}
       {showSettings && (
@@ -420,3 +460,4 @@ function App() {
 }
 
 export default App;
+

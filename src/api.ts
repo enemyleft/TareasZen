@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { Task, Label, TaskWithLabels } from "./types";
+import { Task, Label, TaskWithLabels, TaskFilter } from "./types";
 
 // Task API
 export async function createTask(
@@ -22,8 +22,8 @@ export async function getPlatform(): Promise<String> {
   return await invoke("get_platform");
 }
 
-export async function getAllTasks(): Promise<TaskWithLabels[]> {
-  return await invoke("get_all_tasks");
+export async function getTasks(filter: TaskFilter): Promise<TaskWithLabels[]> {
+  return await invoke("get_tasks", { filter });
 }
 
 export async function updateTask(task: Task): Promise<void> {

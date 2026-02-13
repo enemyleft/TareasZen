@@ -26,3 +26,13 @@ export interface TaskWithLabels {
 export type ViewMode = 'all' | 'by-label' | 'completed';
 export type SortBy = 'position' | 'priority' | 'created_at' | 'due_date';
 export type SortOrder = 'asc' | 'desc';
+
+export interface TaskFilter {
+  label_id?: string | null;
+  priority?: number | null;
+  completed?: boolean | null;
+  search?: string | null;
+  sort_by?: string | null;
+  sort_order?: string | null;
+  limit?: number | null;
+}

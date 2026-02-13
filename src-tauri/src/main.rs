@@ -5,7 +5,7 @@
 
 mod database;
 
-use database::{Database, Label, Task, TaskWithLabels};
+use database::{Database, Label, Task, TaskWithLabels, TaskFilter};
 use std::sync::Mutex;
 use tauri::State;
 
@@ -35,9 +35,9 @@ fn create_task(
 }
 
 #[tauri::command]
-fn get_all_tasks(state: State<Mutex<AppState>>) -> Result<Vec<TaskWithLabels>, String> {
+fn get_tasks(state: State<Mutex<AppState>>, filter: TaskFilter) -> Result<Vec<TaskWithLabels>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.get_all_tasks().map_err(|e| e.to_string())
+    state.db.get_tasks(filter).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -176,7 +176,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_platform,
             create_task,
-            get_all_tasks,
+            get_tasks,
             update_task,
             delete_task,
             update_task_positions,

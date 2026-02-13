@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use std::{ptr::null, sync::Mutex};
 use uuid::Uuid;
 
+pub const DEFAULT_TASK_LIMIT: i32 = 1000;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Task {
     pub id: String,
@@ -30,6 +32,17 @@ pub struct Label {
 pub struct TaskWithLabels {
     pub task: Task,
     pub labels: Vec<Label>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+pub struct TaskFilter {
+    pub label_id: Option<String>,
+    pub priority: Option<i32>,
+    pub completed: Option<bool>,
+    pub search: Option<String>,
+    pub sort_by: Option<String>,      // "priority", "created_at", "due_date"
+    pub sort_order: Option<String>,   // "asc", "desc"
+    pub limit: Option<i32>,
 }
 
 pub struct Database {
@@ -129,13 +142,88 @@ impl Database {
         })
     }
 
-    pub fn get_all_tasks(&self) -> SqliteResult<Vec<TaskWithLabels>> {
+    pub fn get_tasks(&self, filter: TaskFilter) -> SqliteResult<Vec<TaskWithLabels>> {
         let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare(
-            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position FROM tasks ORDER BY position"
-        )?;
-
-        let tasks: Vec<Task> = stmt.query_map([], |row| {
+        
+        let limit = filter.limit.unwrap_or(DEFAULT_TASK_LIMIT);
+        let sort_by = filter.sort_by.unwrap_or_else(|| "created_at".to_string());
+        let sort_order = filter.sort_order.unwrap_or_else(|| "desc".to_string());
+        
+        // Build query dynamically
+        let mut sql = String::from(
+            "SELECT DISTINCT t.id, t.title, t.description, t.priority, t.created_at, 
+            t.due_date, t.reminder_date, t.completed, t.completed_at, t.position
+            FROM tasks t"
+        );
+        
+        let mut conditions: Vec<String> = Vec::new();
+        let mut params: Vec<Box<dyn rusqlite::ToSql>> = Vec::new();
+        
+        // Join with task_labels if filtering by label
+        if filter.label_id.is_some() {
+            sql.push_str(" INNER JOIN task_labels tl ON t.id = tl.task_id");
+        }
+        
+        // Label filter
+        if let Some(ref label_id) = filter.label_id {
+            conditions.push(format!("tl.label_id = ?{}", params.len() + 1));
+            params.push(Box::new(label_id.clone()));
+        }
+        
+        // Priority filter
+        if let Some(priority) = filter.priority {
+            conditions.push(format!("t.priority = ?{}", params.len() + 1));
+            params.push(Box::new(priority));
+        }
+        
+        // Completed filter
+        if let Some(completed) = filter.completed {
+            conditions.push(format!("t.completed = ?{}", params.len() + 1));
+            params.push(Box::new(completed as i32));
+        }
+        
+        // Search filter
+        if let Some(ref search) = filter.search {
+            let search_pattern = format!("%{}%", search);
+            conditions.push(format!(
+                "(t.title LIKE ?{} OR t.description LIKE ?{})",
+                params.len() + 1,
+                params.len() + 2
+            ));
+            params.push(Box::new(search_pattern.clone()));
+            params.push(Box::new(search_pattern));
+        }
+        
+        // Add WHERE clause
+        if !conditions.is_empty() {
+            sql.push_str(" WHERE ");
+            sql.push_str(&conditions.join(" AND "));
+        }
+        
+        // Add ORDER BY
+        let order_column = match sort_by.as_str() {
+            "priority" => "t.priority",
+            "due_date" => "t.due_date",
+            "created_at" => "t.created_at",
+            _ => "t.created_at",
+        };
+        let order_dir = if sort_order == "asc" { "ASC" } else { "DESC" };
+        
+        // Handle NULL values in sorting
+        if sort_by == "due_date" {
+            sql.push_str(&format!(" ORDER BY {} IS NULL, {} {}", order_column, order_column, order_dir));
+        } else {
+            sql.push_str(&format!(" ORDER BY {} {}", order_column, order_dir));
+        }
+        
+        // Add LIMIT
+        sql.push_str(&format!(" LIMIT {}", limit));
+        
+        // Execute query
+        let params_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|p| p.as_ref()).collect();
+        let mut stmt = conn.prepare(&sql)?;
+        
+        let tasks: Vec<Task> = stmt.query_map(params_refs.as_slice(), |row| {
             Ok(Task {
                 id: row.get(0)?,
                 title: row.get(1)?,
@@ -149,13 +237,16 @@ impl Database {
                 position: row.get(9)?,
             })
         })?.filter_map(|r| r.ok()).collect();
-
+        
+        drop(stmt);
+        
+        // Get labels for each task
         let mut result = Vec::new();
         for task in tasks {
             let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
             result.push(TaskWithLabels { task, labels });
         }
-
+        
         Ok(result)
     }
 

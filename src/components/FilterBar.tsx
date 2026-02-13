@@ -7,8 +7,8 @@ interface FilterBarProps {
   setSortOrder: (order: SortOrder) => void;
   filterPriority: number | null;
   setFilterPriority: (priority: number | null) => void;
-  showCompleted: boolean;
-  setShowCompleted: (show: boolean) => void;
+  showCompleted: boolean | null;
+  setShowCompleted: (show: boolean | null) => void;
 }
 
 export function FilterBar({
@@ -56,15 +56,19 @@ export function FilterBar({
       </div>
 
       <div className="filter-group">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={showCompleted}
-            onChange={(e) => setShowCompleted(e.target.checked)}
-          />
-          Show done
-        </label>
+        <label>Status:</label>
+        <select
+          value={showCompleted === null ? "" : showCompleted ? "completed" : "open"}
+          onChange={(e) => {
+            const val = e.target.value;
+            setShowCompleted(val === "" ? null : val === "completed");
+          }}>
+          <option value="">All</option>
+          <option value="open">Open</option>
+          <option value="completed">Completed</option>
+        </select>
       </div>
+
     </div>
   );
 }
