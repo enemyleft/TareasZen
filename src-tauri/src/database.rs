@@ -209,9 +209,17 @@ impl Database {
         };
         let order_dir = if sort_order == "asc" { "ASC" } else { "DESC" };
         
-        // Handle NULL values in sorting
+        // Handle NULL values in sorting, with priority as secondary sort
         if sort_by == "due_date" {
-            sql.push_str(&format!(" ORDER BY {} IS NULL, {} {}", order_column, order_column, order_dir));
+            sql.push_str(&format!(
+                " ORDER BY {} IS NULL, {} {}, t.priority DESC",
+                order_column, order_column, order_dir
+            ));
+        } else if sort_by == "priority" {
+            sql.push_str(&format!(
+                " ORDER BY {} {}, t.due_date IS NULL, t.due_date ASC",
+                order_column, order_dir
+            ));
         } else {
             sql.push_str(&format!(" ORDER BY {} {}", order_column, order_dir));
         }

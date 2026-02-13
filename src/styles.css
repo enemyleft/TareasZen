@@ -141,6 +141,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100vh;
 }
 
 .header {
@@ -209,6 +210,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
 }
 
 /* Task Card */
@@ -375,7 +377,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 32px;
-}
+  min-height: 0;
+} 
 
 .label-group {
   background: var(--bg-secondary);

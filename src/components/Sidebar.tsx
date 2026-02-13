@@ -21,13 +21,14 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
+     
       <div className="sidebar-header">
         <h1 className="app-title">TareasZen</h1>
       </div>
 
       <nav className="sidebar-nav">
         
-        <section className="nav-section nav-section-bottom">
+        <section className="nav-section ">
           <button className="nav-item" onClick={onOpenSettings}>
             <span className="nav-icon">⚙️</span>
             Settings

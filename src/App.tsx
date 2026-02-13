@@ -30,10 +30,10 @@ function App() {
   const [labels, setLabels] = useState<Label[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("all");
   const [selectedLabelId, setSelectedLabelId] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortBy>("position");
+  const [sortBy, setSortBy] = useState<SortBy>("due_date");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [filterPriority, setFilterPriority] = useState<number | null>(null);
-  const [showCompleted, setShowCompleted] = useState<boolean | null>(null);
+  const [showCompleted, setShowCompleted] = useState<boolean | null>(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskWithLabels | null>(null);
