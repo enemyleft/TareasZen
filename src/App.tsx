@@ -40,6 +40,8 @@ function App() {
   const [showLabelManager, setShowLabelManager] = useState(false);
   const [showStartupNotification, setShowStartupNotification] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [overdueTasks, setOverdueTasks] = useState<TaskWithLabels[]>([]);
+  const [reminderTasks, setReminderTasks] = useState<TaskWithLabels[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -107,50 +109,19 @@ function App() {
     init();
   }, []);
 
-  /*
-  // TODO: REMOVE
-  const loadData = useCallback(async () => {
-    await Promise.all([loadTasks(), loadLabels()]);
-
-    // get os information and store in dom. (windows/linux) this way
-    // we can apply different css styles for the platforms if necessary
-    const os = await api.getPlatform();
-    document.documentElement.classList.add(`os-${os}`);
-
-      //TODO: TWICE?
-    // Check for automatic backup
-    try {
-      const backupResult = await api.checkAndRunBackup();
-      if (backupResult) {
-        console.log("Automatic backup created:", backupResult);
+  // Load notification tasks once on startup
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        const [overdue, reminders] = await api.getNotificationTasks();
+        setOverdueTasks(overdue);
+        setReminderTasks(reminders);
+      } catch (error) {
+        console.error("Failed to load notification tasks:", error);
       }
-    } catch (e) {
-      console.error("Backup check failed:", e);
-    }
-
-    // TODO: WHAT IS USE EFFECT? 
-    useEffect(() => {
-      loadLabels();
-    }, [loadLabels]);
-
-    useEffect(() => {
-      loadTasks();
-    }, [loadTasks]);
-
-    useEffect(() => {
-      // Check backup on initial load only
-      const checkBackup = async () => {
-        try {
-          const backupResult = await api.checkAndRunBackup();
-          if (backupResult) {
-            console.log("Automatic backup created:", backupResult);
-          }
-        } catch (e) {
-          console.error("Backup check failed:", e);
-        }
-      };
-      checkBackup();
-    }, []);*/
+    };
+    loadNotifications();
+  }, []);
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -269,19 +240,6 @@ function App() {
   }));
 
   const unlabledTasks = tasks.filter((t) => t.labels.length === 0);
-
-  // get lists of overdue and reminder tasks to notify on startup
-  const now = new Date();
-  const overdueTasks = tasks.filter(
-    (t) => t.task.due_date && !t.task.completed && new Date(t.task.due_date) < now
-  );
-  const reminderTasks = tasks.filter(
-    (t) =>
-      t.task.reminder_date &&
-      !t.task.completed &&
-      new Date(t.task.reminder_date) <= now &&
-      !overdueTasks.some((o) => o.task.id === t.task.id)
-  );
 
   return (
     <div className="app">

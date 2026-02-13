@@ -446,6 +446,77 @@ impl Database {
         Ok(backup_file)
     }
 
+    pub fn get_notification_tasks(&self) -> SqliteResult<(Vec<TaskWithLabels>, Vec<TaskWithLabels>)> {
+        let conn = self.conn.lock().unwrap();
+        let now = chrono::Utc::now().to_rfc3339();
+        
+        // Overdue tasks
+        let mut stmt = conn.prepare(
+            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position
+            FROM tasks 
+            WHERE completed = 0 AND due_date IS NOT NULL AND due_date < ?1
+            ORDER BY due_date ASC"
+        )?;
+        
+        let overdue: Vec<Task> = stmt.query_map([&now], |row| {
+            Ok(Task {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                description: row.get(2)?,
+                priority: row.get(3)?,
+                created_at: row.get(4)?,
+                due_date: row.get(5)?,
+                reminder_date: row.get(6)?,
+                completed: row.get::<_, i32>(7)? != 0,
+                completed_at: row.get(8)?,
+                position: row.get(9)?,
+            })
+        })?.filter_map(|r| r.ok()).collect();
+        
+        drop(stmt);
+        
+        // Reminder tasks (not already in overdue)
+        let mut stmt = conn.prepare(
+            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position
+            FROM tasks 
+            WHERE completed = 0 AND reminder_date IS NOT NULL AND reminder_date <= ?1
+            AND (due_date IS NULL OR due_date >= ?1)
+            ORDER BY reminder_date ASC"
+        )?;
+        
+        let reminders: Vec<Task> = stmt.query_map([&now], |row| {
+            Ok(Task {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                description: row.get(2)?,
+                priority: row.get(3)?,
+                created_at: row.get(4)?,
+                due_date: row.get(5)?,
+                reminder_date: row.get(6)?,
+                completed: row.get::<_, i32>(7)? != 0,
+                completed_at: row.get(8)?,
+                position: row.get(9)?,
+            })
+        })?.filter_map(|r| r.ok()).collect();
+        
+        drop(stmt);
+        
+        // Get labels for each task
+        let mut overdue_with_labels = Vec::new();
+        for task in overdue {
+            let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
+            overdue_with_labels.push(TaskWithLabels { task, labels });
+        }
+        
+        let mut reminders_with_labels = Vec::new();
+        for task in reminders {
+            let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
+            reminders_with_labels.push(TaskWithLabels { task, labels });
+        }
+        
+        Ok((overdue_with_labels, reminders_with_labels))
+    }
+
     pub fn should_backup(&self) -> bool {
         let enabled = self.get_setting("backup_enabled")
             .ok()

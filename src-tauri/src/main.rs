@@ -158,6 +158,12 @@ fn check_and_run_backup(state: State<Mutex<AppState>>) -> Result<Option<String>,
     Ok(Some(backup_file))
 }
 
+#[tauri::command]
+fn get_notification_tasks(state: State<Mutex<AppState>>) -> Result<(Vec<TaskWithLabels>, Vec<TaskWithLabels>), String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.get_notification_tasks().map_err(|e| e.to_string())
+}
+
 fn main() {
     let db_path = dirs::data_local_dir()
         .unwrap_or_else(|| std::path::PathBuf::from("."))
@@ -193,6 +199,7 @@ fn main() {
             get_default_backup_path,
             get_db_path,
             check_and_run_backup,
+            get_notification_tasks,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -92,3 +92,7 @@ export async function getDbPath(): Promise<string> {
 export async function checkAndRunBackup(): Promise<string | null> {
   return await invoke("check_and_run_backup");
 }
+
+export async function getNotificationTasks(): Promise<[TaskWithLabels[], TaskWithLabels[]]> {
+  return await invoke("get_notification_tasks");
+}
