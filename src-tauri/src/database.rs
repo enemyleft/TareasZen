@@ -1,7 +1,7 @@
-use chrono::{DateTime, Utc};
+use chrono::{Utc};
 use rusqlite::{Connection, Result as SqliteResult, params};
 use serde::{Deserialize, Serialize};
-use std::{ptr::null, sync::Mutex};
+use std::{sync::Mutex};
 use uuid::Uuid;
 
 pub const DEFAULT_TASK_LIMIT: i32 = 1000;
@@ -106,6 +106,7 @@ impl Database {
             INSERT OR IGNORE INTO settings (key, value) VALUES ('backup_path', '');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('backup_interval_days', '7');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('last_backup', '');
+            INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_mode', 'false');
 
             "
         )?;

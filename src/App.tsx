@@ -24,6 +24,7 @@ import { Sidebar } from "./components/Sidebar";
 import { FilterBar } from "./components/FilterBar";
 import { StartupNotification } from "./components/StartupNotifications";
 import { Settings } from "./components/Settings";
+import { ZenDialog } from "./components/ZenDialog";
 
 function App() {
   const [tasks, setTasks] = useState<TaskWithLabels[]>([]);
@@ -42,8 +43,9 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [overdueTasks, setOverdueTasks] = useState<TaskWithLabels[]>([]);
   const [reminderTasks, setReminderTasks] = useState<TaskWithLabels[]>([]);
-  const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString()
-);
+  const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString());
+  const [showZenDialog, setShowZenDialog] = useState(false);
+  const [zenModeEnabled, setZenModeEnabled] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -152,6 +154,20 @@ function App() {
     return () => clearInterval(interval);
   }, [lastNotificationDate]);
 
+  // Load zen mode setting
+  useEffect(() => {
+    const loadZenMode = async () => {
+      try {
+        const settings = await api.getAllSettings();
+        const settingsMap = Object.fromEntries(settings);
+        setZenModeEnabled(settingsMap["zen_mode"] === "true");
+      } catch (error) {
+        console.error("Failed to load zen mode setting:", error);
+      }
+    };
+    loadZenMode();
+  }, [showSettings]); // Reload when settings close
+
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -258,6 +274,10 @@ function App() {
       };
       await api.updateTask(updatedTask);
       await loadTasks();
+      
+      if (isCompleting && zenModeEnabled) {
+        setShowZenDialog(true);
+      }
     } catch (error) {
       console.error("Failed to toggle task:", error);
     }
@@ -445,6 +465,9 @@ function App() {
       )}
       {showSettings && (
         <Settings onClose={() => setShowSettings(false)} />
+      )}
+      {showZenDialog && (
+        <ZenDialog onClose={() => setShowZenDialog(false)} />
       )}
     </div>
   );

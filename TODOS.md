@@ -1,10 +1,13 @@
 
 # Wiederkehrende Aufgaben
 
+# Labels links sollen die anzahl aufgaben anzeigen
 
-# ZEN
+# Labels links sollen positionierbar sein
 
-Option Zen einbauen - nach jeder aufgabe kommt ein guter rat -> kaffe, atemübung, tee, laufen gehen usw.
+# Labels sollen scrollbar sein, bei vielen labels
+
+# Notifications sollen label auch anzeigen
 
 # Statistik
 
@@ -14,7 +17,7 @@ Zumindest welche aufgaben in den letzten X tagen erledigt wurden, für den Rappo
 
 # Position issue:
 
-derzeit gibts eine position die geändert werden kann. aber da ein task innerhalb mehrerer labels sein kann müsste das wohl theoretisch eine position je label geben.
+derzeit gibts eine position die geändert werden kann. aber da ein task innerhalb mehrerer labels sein kann müsste das wohl theoretisch eine position je label geben. --> das ganze ausbauen da es derzeit eh nicht richtig funktioniert!
 
 # Status einführen? 
 

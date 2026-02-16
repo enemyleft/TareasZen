@@ -14,6 +14,7 @@ export function Settings({ onClose }: SettingsProps) {
   const [dbPath, setDbPath] = useState("");
   const [saving, setSaving] = useState(false);
   const [backupStatus, setBackupStatus] = useState<string | null>(null);
+  const [zenMode, setZenMode] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -35,6 +36,7 @@ export function Settings({ onClose }: SettingsProps) {
       setBackupPath(settingsMap["backup_path"] || "");
       setBackupInterval(settingsMap["backup_interval_days"] || "7");
       setLastBackup(settingsMap["last_backup"] || null);
+      setZenMode(settingsMap["zen_mode"] === "true");
     } catch (error) {
       console.error("Failed to load settings:", error);
     }
@@ -47,6 +49,7 @@ export function Settings({ onClose }: SettingsProps) {
       await api.setSetting("backup_enabled", backupEnabled.toString());
       await api.setSetting("backup_path", pathToSave);
       await api.setSetting("backup_interval_days", backupInterval);
+      await api.setSetting("zen_mode", zenMode.toString());
       setBackupPath(pathToSave);
       setBackupStatus("Settings saved");
       setTimeout(() => setBackupStatus(null), 3000);
@@ -82,6 +85,20 @@ export function Settings({ onClose }: SettingsProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
         <h2>Settings</h2>
+
+        <section className="settings-section">
+          <h3>Zen Mode</h3>
+          <div className="form-group">
+            <label className="settings-checkbox">
+              <input
+                type="checkbox"
+                checked={zenMode}
+                onChange={(e) => setZenMode(e.target.checked)}
+              />
+              <span>Show mindfulness reminder after completing a task</span>
+            </label>
+          </div>
+        </section>
 
         <section className="settings-section">
           <h3>Automatic Backup</h3>
