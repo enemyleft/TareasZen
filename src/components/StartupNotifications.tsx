@@ -16,7 +16,7 @@ export function StartupNotification({
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal notification-modal" onClick={(e) => e.stopPropagation()}>
         <h2>📋 Reminders</h2>
 

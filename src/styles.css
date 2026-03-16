@@ -189,14 +189,14 @@ body {
   cursor: pointer;
 }
 
-.checkbox-label {
+.settings-checkbox {
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
 }
 
-.checkbox-label input[type="checkbox"] {
+.settings-checkbox input[type="checkbox"] {
   width: 16px;
   height: 16px;
   accent-color: var(--accent);
@@ -874,4 +874,102 @@ body {
   line-height: 1.6;
   color: var(--text-primary);
   margin-bottom: 24px;
+}
+
+/* Recurring Tasks */
+.modal-large {
+  max-width: 700px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.interval-row {
+  display: flex;
+  gap: 12px;
+}
+
+.recurring-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.recurring-task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent);
+}
+
+.recurring-task-item.inactive {
+  opacity: 0.5;
+  border-left-color: var(--text-muted);
+}
+
+.recurring-task-info {
+  flex: 1;
+}
+
+.recurring-task-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.recurring-task-title {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.recurring-task-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.recurring-task-lastrun {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.recurring-task-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.priority-badge.priority-1 {
+  background-color: #4ade80;
+}
+
+.priority-badge.priority-2 {
+  background-color: #facc15;
+}
+
+.priority-badge.priority-3 {
+  background-color: #f87171;
+}
+
+.settings-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
 }

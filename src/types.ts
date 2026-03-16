@@ -36,3 +36,18 @@ export interface TaskFilter {
   sort_order?: string | null;
   limit?: number | null;
 }
+
+export interface RecurringTask {
+  id: string;
+  title: string;
+  description: string | null;
+  priority: number;
+  interval_value: number;
+  interval_unit: string; // "days", "weeks", "months", "day_of_month"
+  due_date_offset: number | null;
+  start_date: string;
+  end_date: string | null;
+  is_active: boolean;
+  last_run: string | null;
+  created_at: string;
+}

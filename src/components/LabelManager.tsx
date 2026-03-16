@@ -60,7 +60,7 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
         <h2>Labels verwalten</h2>
 

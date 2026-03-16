@@ -1,4 +1,4 @@
-use chrono::{Utc};
+use chrono::{Utc, Datelike};
 use rusqlite::{Connection, Result as SqliteResult, params};
 use serde::{Deserialize, Serialize};
 use std::{sync::Mutex};
@@ -43,6 +43,22 @@ pub struct TaskFilter {
     pub sort_by: Option<String>,      // "priority", "created_at", "due_date"
     pub sort_order: Option<String>,   // "asc", "desc"
     pub limit: Option<i32>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RecurringTask {
+    pub id: String,
+    pub title: String,
+    pub description: Option<String>,
+    pub priority: i32,
+    pub interval_value: i32,
+    pub interval_unit: String,  // "days", "weeks", "months", "day_of_month"
+    pub due_date_offset: Option<i32>,  // days after creation
+    pub start_date: String,
+    pub end_date: Option<String>,
+    pub is_active: bool,
+    pub last_run: Option<String>,
+    pub created_at: String,
 }
 
 pub struct Database {
@@ -106,7 +122,22 @@ impl Database {
             INSERT OR IGNORE INTO settings (key, value) VALUES ('backup_path', '');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('backup_interval_days', '7');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('last_backup', '');
-            INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_mode', 'false');
+            INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_mode', 'true');
+
+            CREATE TABLE IF NOT EXISTS recurring_tasks (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                description TEXT,
+                priority INTEGER NOT NULL DEFAULT 2,
+                interval_value INTEGER NOT NULL,
+                interval_unit TEXT NOT NULL,
+                due_date_offset INTEGER,
+                start_date TEXT NOT NULL,
+                end_date TEXT,
+                is_active INTEGER NOT NULL DEFAULT 1,
+                last_run TEXT,
+                created_at TEXT NOT NULL
+            );
 
             "
         )?;
@@ -555,6 +586,231 @@ impl Database {
                 let diff = now.signed_duration_since(last.with_timezone(&chrono::Utc));
                 diff.num_days() >= interval_days
             }
+        }
+    }
+
+    // Recurring task operations
+    pub fn create_recurring_task(
+        &self,
+        title: String,
+        description: Option<String>,
+        priority: i32,
+        interval_value: i32,
+        interval_unit: String,
+        due_date_offset: Option<i32>,
+        start_date: String,
+        end_date: Option<String>,
+    ) -> SqliteResult<RecurringTask> {
+        let conn = self.conn.lock().unwrap();
+        let id = Uuid::new_v4().to_string();
+        let created_at = Utc::now().to_rfc3339();
+
+        conn.execute(
+            "INSERT INTO recurring_tasks (id, title, description, priority, interval_value, interval_unit, due_date_offset, start_date, end_date, is_active, last_run, created_at)
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 1, NULL, ?10)",
+            params![id, title, description, priority, interval_value, interval_unit, due_date_offset, start_date, end_date, created_at],
+        )?;
+
+        Ok(RecurringTask {
+            id,
+            title,
+            description,
+            priority,
+            interval_value,
+            interval_unit,
+            due_date_offset,
+            start_date,
+            end_date,
+            is_active: true,
+            last_run: None,
+            created_at,
+        })
+    }
+
+    pub fn get_all_recurring_tasks(&self) -> SqliteResult<Vec<RecurringTask>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT id, title, description, priority, interval_value, interval_unit, due_date_offset, start_date, end_date, is_active, last_run, created_at
+            FROM recurring_tasks ORDER BY created_at DESC"
+        )?;
+
+        let tasks = stmt.query_map([], |row| {
+            Ok(RecurringTask {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                description: row.get(2)?,
+                priority: row.get(3)?,
+                interval_value: row.get(4)?,
+                interval_unit: row.get(5)?,
+                due_date_offset: row.get(6)?,
+                start_date: row.get(7)?,
+                end_date: row.get(8)?,
+                is_active: row.get::<_, i32>(9)? != 0,
+                last_run: row.get(10)?,
+                created_at: row.get(11)?,
+            })
+        })?.filter_map(|r| r.ok()).collect();
+
+        Ok(tasks)
+    }
+
+    pub fn update_recurring_task(&self, task: RecurringTask) -> SqliteResult<()> {
+        let conn = self.conn.lock().unwrap();
+        conn.execute(
+            "UPDATE recurring_tasks SET title = ?1, description = ?2, priority = ?3, interval_value = ?4, interval_unit = ?5, due_date_offset = ?6, start_date = ?7, end_date = ?8, is_active = ?9, last_run = ?10 WHERE id = ?11",
+            params![task.title, task.description, task.priority, task.interval_value, task.interval_unit, task.due_date_offset, task.start_date, task.end_date, task.is_active as i32, task.last_run, task.id],
+        )?;
+        Ok(())
+    }
+
+    pub fn delete_recurring_task(&self, id: &str) -> SqliteResult<()> {
+        let conn = self.conn.lock().unwrap();
+        conn.execute("DELETE FROM recurring_tasks WHERE id = ?1", [id])?;
+        Ok(())
+    }
+
+    pub fn get_or_create_auto_label(&self) -> SqliteResult<Label> {
+        let conn = self.conn.lock().unwrap();
+        
+        // Check if "auto" label exists
+        let existing: Option<Label> = conn.query_row(
+            "SELECT id, name, color, created_at FROM labels WHERE name = 'auto'",
+            [],
+            |row| Ok(Label {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                color: row.get(2)?,
+                created_at: row.get(3)?,
+            })
+        ).ok();
+
+        if let Some(label) = existing {
+            return Ok(label);
+        }
+
+        // Create it
+        let id = Uuid::new_v4().to_string();
+        let created_at = Utc::now().to_rfc3339();
+        let color = "#6b7280".to_string(); // gray
+
+        conn.execute(
+            "INSERT INTO labels (id, name, color, created_at) VALUES (?1, 'auto', ?2, ?3)",
+            params![id, color, created_at],
+        )?;
+
+        Ok(Label {
+            id,
+            name: "auto".to_string(),
+            color,
+            created_at,
+        })
+    }
+
+    pub fn process_recurring_tasks(&self) -> SqliteResult<Vec<String>> {
+        let now = Utc::now();
+        let today = now.format("%Y-%m-%d").to_string();
+        let mut created_tasks: Vec<String> = Vec::new();
+
+        let recurring_tasks = self.get_all_recurring_tasks()?;
+        let auto_label = self.get_or_create_auto_label()?;
+
+        for rt in recurring_tasks {
+            if !rt.is_active {
+                continue;
+            }
+
+            // Check if past end_date
+            if let Some(ref end_date) = rt.end_date {
+                if today > *end_date {
+                    continue;
+                }
+            }
+
+            // Check if before start_date
+            if today < rt.start_date {
+                continue;
+            }
+
+            // Check if due
+            let is_due = self.is_recurring_task_due(&rt, &now);
+
+            if is_due {
+                // Create the task
+                let due_date = rt.due_date_offset.map(|offset| {
+                    let due = now + chrono::Duration::days(offset as i64);
+                    due.to_rfc3339()
+                });
+
+                let task = self.create_task(
+                    rt.title.clone(),
+                    rt.description.clone(),
+                    rt.priority,
+                    due_date,
+                    None, // no reminder
+                )?;
+
+                // Add auto label
+                self.add_label_to_task(&task.id, &auto_label.id)?;
+
+                // Update last_run
+                let conn = self.conn.lock().unwrap();
+                conn.execute(
+                    "UPDATE recurring_tasks SET last_run = ?1 WHERE id = ?2",
+                    params![now.to_rfc3339(), rt.id],
+                )?;
+
+                created_tasks.push(rt.title.clone());
+            }
+        }
+
+        Ok(created_tasks)
+    }
+
+    fn is_recurring_task_due(&self, rt: &RecurringTask, now: &chrono::DateTime<Utc>) -> bool {
+        let today = now.format("%Y-%m-%d").to_string();
+        let current_day_of_month = now.day() as i32;
+
+        // Handle day_of_month: check if today is the right day
+        if rt.interval_unit == "day_of_month" {
+            if current_day_of_month != rt.interval_value {
+                return false;
+            }
+            // Check if we already ran this month
+            if let Some(ref last_run) = rt.last_run {
+                if let Ok(last) = chrono::DateTime::parse_from_rfc3339(last_run) {
+                    let last_month = last.format("%Y-%m").to_string();
+                    let this_month = now.format("%Y-%m").to_string();
+                    if last_month == this_month {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // For other intervals, check last_run
+        let last_run = match &rt.last_run {
+            Some(lr) => match chrono::DateTime::parse_from_rfc3339(lr) {
+                Ok(dt) => dt.with_timezone(&Utc),
+                Err(_) => return true, // Can't parse, assume due
+            },
+            None => {
+                // Never run, check if start_date <= today
+                return rt.start_date <= today;
+            }
+        };
+
+        let duration_since_last = now.signed_duration_since(last_run);
+
+        match rt.interval_unit.as_str() {
+            "days" => duration_since_last.num_days() >= rt.interval_value as i64,
+            "weeks" => duration_since_last.num_weeks() >= rt.interval_value as i64,
+            "months" => {
+                let months_diff = (now.year() - last_run.year()) * 12 
+                    + (now.month() as i32 - last_run.month() as i32);
+                months_diff >= rt.interval_value
+            },
+            _ => false,
         }
     }
 

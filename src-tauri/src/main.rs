@@ -5,7 +5,7 @@
 
 mod database;
 
-use database::{Database, Label, Task, TaskWithLabels, TaskFilter};
+use database::{Database, Label, Task, TaskWithLabels, TaskFilter, RecurringTask};
 use std::sync::Mutex;
 use tauri::State;
 
@@ -164,6 +164,47 @@ fn get_notification_tasks(state: State<Mutex<AppState>>) -> Result<(Vec<TaskWith
     state.db.get_notification_tasks().map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+fn create_recurring_task(
+    state: State<Mutex<AppState>>,
+    title: String,
+    description: Option<String>,
+    priority: i32,
+    interval_value: i32,
+    interval_unit: String,
+    due_date_offset: Option<i32>,
+    start_date: String,
+    end_date: Option<String>,
+) -> Result<RecurringTask, String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.create_recurring_task(title, description, priority, interval_value, interval_unit, due_date_offset, start_date, end_date)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn get_all_recurring_tasks(state: State<Mutex<AppState>>) -> Result<Vec<RecurringTask>, String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.get_all_recurring_tasks().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn update_recurring_task(state: State<Mutex<AppState>>, task: RecurringTask) -> Result<(), String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.update_recurring_task(task).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn delete_recurring_task(state: State<Mutex<AppState>>, id: String) -> Result<(), String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.delete_recurring_task(&id).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn process_recurring_tasks(state: State<Mutex<AppState>>) -> Result<Vec<String>, String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.process_recurring_tasks().map_err(|e| e.to_string())
+}
+
 fn main() {
     let db_path = dirs::data_local_dir()
         .unwrap_or_else(|| std::path::PathBuf::from("."))
@@ -200,6 +241,11 @@ fn main() {
             get_db_path,
             check_and_run_backup,
             get_notification_tasks,
+            create_recurring_task,
+            get_all_recurring_tasks,
+            update_recurring_task,
+            delete_recurring_task,
+            process_recurring_tasks,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -25,6 +25,7 @@ import { FilterBar } from "./components/FilterBar";
 import { StartupNotification } from "./components/StartupNotifications";
 import { Settings } from "./components/Settings";
 import { ZenDialog } from "./components/ZenDialog";
+import { RecurringTaskManager } from "./components/RecurringTaskManager";
 
 function App() {
   const [tasks, setTasks] = useState<TaskWithLabels[]>([]);
@@ -41,6 +42,7 @@ function App() {
   const [showLabelManager, setShowLabelManager] = useState(false);
   const [showStartupNotification, setShowStartupNotification] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [showRecurringTasks, setShowRecurringTasks] = useState(false);
   const [overdueTasks, setOverdueTasks] = useState<TaskWithLabels[]>([]);
   const [reminderTasks, setReminderTasks] = useState<TaskWithLabels[]>([]);
   const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString());
@@ -109,8 +111,38 @@ function App() {
       } catch (e) {
         console.error("Backup check failed:", e);
       }
+
+    try {
+      const createdTasks = await api.processRecurringTasks();
+      if (createdTasks.length > 0) {
+        console.log("Recurring tasks created:", createdTasks);
+        loadTasks();
+        loadLabels();
+      }
+    } catch (e) {
+      console.error("Recurring tasks check failed:", e);
+    }
+
     };
     init();
+  }, []);
+
+  // Process recurring tasks every 30 minutes
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const createdTasks = await api.processRecurringTasks();
+        if (createdTasks.length > 0) {
+          console.log("Recurring tasks created:", createdTasks);
+          loadTasks();
+          loadLabels();
+        }
+      } catch (e) {
+        console.error("Recurring tasks check failed:", e);
+      }
+    }, 30 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Load notification tasks once on startup
@@ -464,7 +496,17 @@ function App() {
         />
       )}
       {showSettings && (
-        <Settings onClose={() => setShowSettings(false)} />
+        <Settings 
+          onClose={() => setShowSettings(false)} 
+          onOpenRecurringTasks={() => {
+            setShowSettings(false);
+            setShowRecurringTasks(true);
+          }}
+        />
+      )}
+
+      {showRecurringTasks && (
+        <RecurringTaskManager onClose={() => setShowRecurringTasks(false)} />
       )}
       {showZenDialog && (
         <ZenDialog onClose={() => setShowZenDialog(false)} />

@@ -24,7 +24,7 @@ export function ZenDialog({ onClose }: ZenDialogProps) {
   const message = zenMessages[Math.floor(Math.random() * zenMessages.length)];
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal zen-modal" onClick={(e) => e.stopPropagation()}>
         <div className="zen-icon">🧘‍♀️</div>
         <p className="zen-message">{message}</p>

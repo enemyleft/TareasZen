@@ -3,9 +3,10 @@ import * as api from "../api";
 
 interface SettingsProps {
   onClose: () => void;
+  onOpenRecurringTasks: () => void;
 }
 
-export function Settings({ onClose }: SettingsProps) {
+export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
   const [backupEnabled, setBackupEnabled] = useState(false);
   const [backupPath, setBackupPath] = useState("");
   const [backupInterval, setBackupInterval] = useState("7");
@@ -82,9 +83,19 @@ export function Settings({ onClose }: SettingsProps) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
         <h2>Settings</h2>
+
+        <section className="settings-section">
+          <h3>Recurring Tasks</h3>
+          <p className="settings-description">
+            Configure tasks that are automatically created at regular intervals.
+          </p>
+          <button className="btn-secondary" onClick={onOpenRecurringTasks}>
+            Manage Recurring Tasks
+          </button>
+        </section>
 
         <section className="settings-section">
           <h3>Zen Mode</h3>
@@ -95,7 +106,7 @@ export function Settings({ onClose }: SettingsProps) {
                 checked={zenMode}
                 onChange={(e) => setZenMode(e.target.checked)}
               />
-              <span>Show mindfulness reminder after completing a task</span>
+              <span>&nbsp; Show mindfulness reminder after completing a task</span>
             </label>
           </div>
         </section>
@@ -104,7 +115,7 @@ export function Settings({ onClose }: SettingsProps) {
           <h3>Automatic Backup</h3>
 
           <div className="form-group">
-            <label className="checkbox-label">
+            <label className="settings-checkbox">
               <input
                 type="checkbox"
                 checked={backupEnabled}

@@ -60,7 +60,7 @@ export function TaskForm({
   };
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
+    <div className="modal-overlay">
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>{isEditing ? "Task bearbeiten" : "Neuer Task"}</h2>
 

@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { confirm } from "@tauri-apps/api/dialog";
-import { Task, Label, TaskWithLabels, TaskFilter } from "./types";
+import { Task, Label, TaskWithLabels, TaskFilter, RecurringTask } from "./types";
 
 // Task API
 export async function createTask(
@@ -100,4 +100,43 @@ export async function getNotificationTasks(): Promise<[TaskWithLabels[], TaskWit
 
 export async function confirmDialog(message: string): Promise<boolean> {
   return await confirm(message, { title: "TareasZen", type: "warning" });
+}
+
+// Recurring Tasks API
+export async function createRecurringTask(
+  title: string,
+  description: string | null,
+  priority: number,
+  intervalValue: number,
+  intervalUnit: string,
+  dueDateOffset: number | null,
+  startDate: string,
+  endDate: string | null
+): Promise<RecurringTask> {
+  return await invoke("create_recurring_task", {
+    title,
+    description,
+    priority,
+    intervalValue,
+    intervalUnit,
+    dueDateOffset,
+    startDate,
+    endDate,
+  });
+}
+
+export async function getAllRecurringTasks(): Promise<RecurringTask[]> {
+  return await invoke("get_all_recurring_tasks");
+}
+
+export async function updateRecurringTask(task: RecurringTask): Promise<void> {
+  return await invoke("update_recurring_task", { task });
+}
+
+export async function deleteRecurringTask(id: string): Promise<void> {
+  return await invoke("delete_recurring_task", { id });
+}
+
+export async function processRecurringTasks(): Promise<string[]> {
+  return await invoke("process_recurring_tasks");
 }
