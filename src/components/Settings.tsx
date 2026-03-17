@@ -16,6 +16,8 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
   const [saving, setSaving] = useState(false);
   const [backupStatus, setBackupStatus] = useState<string | null>(null);
   const [zenMode, setZenMode] = useState(false);
+  const [zenPeriodic, setZenPeriodic] = useState(true);
+  const [zenInterval, setZenInterval] = useState("42");
 
   useEffect(() => {
     loadSettings();
@@ -38,6 +40,8 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
       setBackupInterval(settingsMap["backup_interval_days"] || "7");
       setLastBackup(settingsMap["last_backup"] || null);
       setZenMode(settingsMap["zen_mode"] === "true");
+      setZenPeriodic(settingsMap["zen_periodic"] !== "false");
+      setZenInterval(settingsMap["zen_interval_minutes"] || "42");
     } catch (error) {
       console.error("Failed to load settings:", error);
     }
@@ -51,6 +55,8 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
       await api.setSetting("backup_path", pathToSave);
       await api.setSetting("backup_interval_days", backupInterval);
       await api.setSetting("zen_mode", zenMode.toString());
+      await api.setSetting("zen_periodic", zenPeriodic.toString());
+      await api.setSetting("zen_interval_minutes", zenInterval);
       setBackupPath(pathToSave);
       setBackupStatus("Settings saved");
       setTimeout(() => setBackupStatus(null), 3000);
@@ -109,6 +115,28 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
               <span>&nbsp; Show mindfulness reminder after completing a task</span>
             </label>
           </div>
+          <div className="form-group">
+            <label className="settings-checkbox">
+              <input
+                type="checkbox"
+                checked={zenPeriodic}
+                onChange={(e) => setZenPeriodic(e.target.checked)}
+              />
+              <span>&nbsp; Show periodic mindfulness reminder</span>
+            </label>
+          </div>
+          {zenPeriodic && (
+            <div className="form-group">
+              <label htmlFor="zenInterval">Reminder interval (minutes)</label>
+              <input
+                id="zenInterval"
+                type="number"
+                min="1"
+                value={zenInterval}
+                onChange={(e) => setZenInterval(e.target.value)}
+              />
+            </div>
+          )}
         </section>
 
         <section className="settings-section">

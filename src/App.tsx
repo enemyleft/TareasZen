@@ -31,7 +31,10 @@ function App() {
   const [reminderTasks, setReminderTasks] = useState<TaskWithLabels[]>([]);
   const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString());
   const [showZenDialog, setShowZenDialog] = useState(false);
+  const [zenDialogType, setZenDialogType] = useState<"task" | "periodic">("task");
   const [zenModeEnabled, setZenModeEnabled] = useState(false);
+  const [zenPeriodicEnabled, setZenPeriodicEnabled] = useState(true);
+  const [zenIntervalMinutes, setZenIntervalMinutes] = useState(42);
   const [viewingTask, setViewingTask] = useState<TaskWithLabels | null>(null);
 
   const loadTasks = useCallback(async () => {
@@ -164,19 +167,33 @@ function App() {
     return () => clearInterval(interval);
   }, [lastNotificationDate]);
 
-  // Load zen mode setting
+  // Load zen mode settings
   useEffect(() => {
-    const loadZenMode = async () => {
+    const loadZenSettings = async () => {
       try {
         const settings = await api.getAllSettings();
         const settingsMap = Object.fromEntries(settings);
         setZenModeEnabled(settingsMap["zen_mode"] === "true");
+        setZenPeriodicEnabled(settingsMap["zen_periodic"] !== "false");
+        setZenIntervalMinutes(parseInt(settingsMap["zen_interval_minutes"]) || 42);
       } catch (error) {
-        console.error("Failed to load zen mode setting:", error);
+        console.error("Failed to load zen settings:", error);
       }
     };
-    loadZenMode();
-  }, [showSettings]); // Reload when settings close
+    loadZenSettings();
+  }, [showSettings]);
+
+  // Periodic zen reminder
+  useEffect(() => {
+    if (!zenPeriodicEnabled || showZenDialog) return;
+
+    const timeout = setTimeout(() => {
+      setZenDialogType("periodic");
+      setShowZenDialog(true);
+    }, zenIntervalMinutes * 60 * 1000);
+
+    return () => clearTimeout(timeout);
+  }, [zenPeriodicEnabled, zenIntervalMinutes, showZenDialog]);
 
   const handleCreateTask = async (
     title: string,
@@ -254,6 +271,7 @@ function App() {
       await loadTasks();
       
       if (isCompleting && zenModeEnabled) {
+        setZenDialogType("task");
         setShowZenDialog(true);
       }
     } catch (error) {
@@ -392,7 +410,10 @@ function App() {
         <RecurringTaskManager onClose={() => setShowRecurringTasks(false)} />
       )}
       {showZenDialog && (
-        <ZenDialog onClose={() => setShowZenDialog(false)} />
+        <ZenDialog 
+          onClose={() => setShowZenDialog(false)} 
+          type={zenDialogType}
+        />
       )}
     </div>
   );

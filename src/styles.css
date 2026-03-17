@@ -54,8 +54,12 @@ body {
 }
 
 .sidebar-header {
-  padding: 24px 20px;
+  padding: 24px 20px 23px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  min-height: 90px;
+  box-sizing: border-box;
 }
 
 .app-title {
@@ -150,7 +154,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 32px;
+  padding: 24px 20px 23px;
   border-bottom: 1px solid var(--border-color);
 }
 

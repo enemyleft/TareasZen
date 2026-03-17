@@ -1,8 +1,9 @@
 interface ZenDialogProps {
   onClose: () => void;
+  type: "task" | "periodic";
 }
 
-const zenMessages = [
+const taskMessages = [
   "Well done. Take a deep breath.",
   "Great work. How about a short walk?",
   "Task complete. Stretch your shoulders.",
@@ -20,8 +21,27 @@ const zenMessages = [
   "Nice work. Let your shoulders drop.",
 ];
 
-export function ZenDialog({ onClose }: ZenDialogProps) {
-  const message = zenMessages[Math.floor(Math.random() * zenMessages.length)];
+const periodicMessages = [
+  "Time for a short break. Stand up and stretch.",
+  "Pause for a moment. Take three deep breaths.",
+  "How about a quick walk?",
+  "Rest your eyes. Look at something far away.",
+  "Roll your shoulders and relax your jaw.",
+  "Time to hydrate. Get a glass of water.",
+  "Take a mindful minute. How are you feeling?",
+  "Stretch your hands and wrists.",
+  "Look away from the screen for 20 seconds.",
+  "Check your posture. Sit up straight.",
+  "Time for a micro-break. Breathe slowly.",
+  "Relax your face muscles. Unclench your jaw.",
+  "How about some fresh air?",
+  "Give your mind a moment of rest.",
+  "Notice your breathing. Slow it down.",
+];
+
+export function ZenDialog({ onClose, type }: ZenDialogProps) {
+  const messages = type === "task" ? taskMessages : periodicMessages;
+  const message = messages[Math.floor(Math.random() * messages.length)];
 
   return (
     <div className="modal-overlay">
@@ -35,3 +55,5 @@ export function ZenDialog({ onClose }: ZenDialogProps) {
     </div>
   );
 }
+
+

@@ -123,6 +123,8 @@ impl Database {
             INSERT OR IGNORE INTO settings (key, value) VALUES ('backup_interval_days', '7');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('last_backup', '');
             INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_mode', 'true');
+            INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_periodic', 'true');
+            INSERT OR IGNORE INTO settings (key, value) VALUES ('zen_interval_minutes', '42');
 
             CREATE TABLE IF NOT EXISTS recurring_tasks (
                 id TEXT PRIMARY KEY,
