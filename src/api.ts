@@ -44,6 +44,10 @@ export async function getAllLabels(): Promise<Label[]> {
   return await invoke("get_all_labels");
 }
 
+export async function getTasksByLabel(labelId: string): Promise<TaskWithLabels[]> {
+  return await invoke("get_tasks_by_label", { labelId });
+}
+
 export async function updateLabel(label: Label): Promise<void> {
   return await invoke("update_label", { label });
 }

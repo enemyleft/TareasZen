@@ -26,7 +26,7 @@ export function TaskForm({
 
   const [title, setTitle] = useState(task?.title || "");
   const [description, setDescription] = useState(task?.description || "");
-  const [priority, setPriority] = useState(task?.priority || 2);
+  const [priority, setPriority] = useState(task?.priority || 1);
   const [dueDate, setDueDate] = useState(
     task?.due_date ? task.due_date.split("T")[0] : ""
   );

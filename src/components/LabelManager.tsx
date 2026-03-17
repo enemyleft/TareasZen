@@ -44,15 +44,23 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
     }
   };
 
-  const handleDeleteLabel = async (labelId: string) => {
-
-    const confirmed = await api.confirmDialog("Really want to delete the label?");
-    if (!confirmed) {
-      return;
+  const handleDelete = async (label: Label) => {
+    let message = `Delete label "${label.name}"?`;
+    
+    try {
+      const tasks = await api.getTasksByLabel(label.id);
+      if (tasks.length > 0) {
+        message = `Delete label "${label.name}"?\n\nThis label is assigned to ${tasks.length} task${tasks.length > 1 ? 's' : ''}. The tasks will not be deleted, only the label assignment.`;
+      }
+    } catch (error) {
+      console.error("Failed to get tasks for label:", error);
     }
 
+    const confirmed = await api.confirmDialog(message);
+    if (!confirmed) return;
+
     try {
-      await api.deleteLabel(labelId);
+      await api.deleteLabel(label.id);
       onRefresh();
     } catch (error) {
       console.error("Failed to delete label:", error);
@@ -93,7 +101,7 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
           {labels.map((label) => (
             <div key={label.id} className="label-item">
               {editingLabel?.id === label.id ? (
-                <>
+                <div className="label-edit-form">
                   <input
                     type="text"
                     value={editingLabel.name}
@@ -116,16 +124,15 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
                       />
                     ))}
                   </div>
-                  <button className="btn-primary" onClick={handleUpdateLabel}>
-                    Speichern
-                  </button>
-                  <button
-                    className="btn-secondary"
-                    onClick={() => setEditingLabel(null)}
-                  >
-                    Abbrechen
-                  </button>
-                </>
+                  <div className="label-edit-actions">
+                    <button className="btn-secondary" onClick={() => setEditingLabel(null)}>
+                      Cancel
+                    </button>
+                    <button className="btn-primary" onClick={handleUpdateLabel}>
+                      Save
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <>
                   <span
@@ -143,7 +150,7 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
                     </button>
                     <button
                       className="btn-icon"
-                      onClick={() => handleDeleteLabel(label.id)}
+                      onClick={() => handleDelete(label)}
                     >
                       🗑️
                     </button>

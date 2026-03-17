@@ -280,6 +280,7 @@ function App() {
             {selectedLabelId
               ? labels.find((l) => l.id === selectedLabelId)?.name
               : "All Tasks"}
+            <span className="task-count-header">{filteredTasks.length}</span>
           </h1>
           <div className="header-actions">
             <div className="search-box">
@@ -312,6 +313,7 @@ function App() {
             <TaskCard
               key={taskWithLabels.task.id}
               taskWithLabels={taskWithLabels}
+              onView={() => {/* TODO: implement view */}}
               onEdit={() => setEditingTask(taskWithLabels)}
               onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
               onToggleComplete={() => handleToggleComplete(taskWithLabels)}

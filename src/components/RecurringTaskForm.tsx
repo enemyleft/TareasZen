@@ -25,7 +25,7 @@ export function RecurringTaskForm({
 
   const [title, setTitle] = useState(recurringTask?.title || "");
   const [description, setDescription] = useState(recurringTask?.description || "");
-  const [priority, setPriority] = useState(recurringTask?.priority || 2);
+  const [priority, setPriority] = useState(recurringTask?.priority || 1);
   const [intervalValue, setIntervalValue] = useState(recurringTask?.interval_value || 1);
   const [intervalUnit, setIntervalUnit] = useState(recurringTask?.interval_unit || "days");
   const [dueDateOffset, setDueDateOffset] = useState<string>(

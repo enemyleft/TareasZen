@@ -305,6 +305,40 @@ impl Database {
         Ok(labels)
     }
 
+    pub fn get_tasks_by_label(&self, label_id: &str) -> SqliteResult<Vec<TaskWithLabels>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT t.id, t.title, t.description, t.priority, t.created_at, t.due_date, t.reminder_date, t.completed, t.completed_at
+            FROM tasks t
+            INNER JOIN task_labels tl ON t.id = tl.task_id
+            WHERE tl.label_id = ?1"
+        )?;
+
+        let tasks: Vec<Task> = stmt.query_map([label_id], |row| {
+            Ok(Task {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                description: row.get(2)?,
+                priority: row.get(3)?,
+                created_at: row.get(4)?,
+                due_date: row.get(5)?,
+                reminder_date: row.get(6)?,
+                completed: row.get::<_, i32>(7)? != 0,
+                completed_at: row.get(8)?,
+            })
+        })?.filter_map(|r| r.ok()).collect();
+
+        drop(stmt);
+
+        let mut result = Vec::new();
+        for task in tasks {
+            let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
+            result.push(TaskWithLabels { task, labels });
+        }
+
+        Ok(result)
+    }
+
     pub fn update_task(&self, task: Task) -> SqliteResult<()> {
         let conn = self.conn.lock().unwrap();
         conn.execute(

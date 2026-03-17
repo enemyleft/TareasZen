@@ -2,16 +2,17 @@ import { TaskWithLabels } from "../types";
 
 interface TaskCardProps {
   taskWithLabels: TaskWithLabels;
+  onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
   onToggleComplete: () => void;
 }
 
-const priorityLabels = ["", "low", "medium", "high"];
-const priorityColors = ["", "#4ade80", "#facc15", "#f87171"];
+const priorityLabels = ["", "Low", "Medium", "High"];
 
 export function TaskCard({
   taskWithLabels,
+  onView,
   onEdit,
   onDelete,
   onToggleComplete,
@@ -19,12 +20,12 @@ export function TaskCard({
   const { task, labels } = taskWithLabels;
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return null;
+    if (!dateString) return "--.--.--";
     const date = new Date(dateString);
-    return date.toLocaleDateString("de-DE", {
+    return date.toLocaleDateString("de-CH", {
       day: "2-digit",
       month: "2-digit",
-      year: "numeric",
+      year: "2-digit",
     });
   };
 
@@ -34,75 +35,69 @@ export function TaskCard({
   const isReminder =
     task.reminder_date && !task.completed && new Date(task.reminder_date) <= new Date();
 
-  return (
-      <div
-        className={`task-card ${task.completed ? "completed" : ""} ${
-          isOverdue ? "overdue" : ""
-        }`}
-      >
+  const firstLineDescription = task.description
+    ? task.description.split("\n")[0]
+    : "";
 
-      <div className="task-checkbox" onClick={onToggleComplete}>
-        {task.completed ? "✓" : ""}
+  return (
+    <div
+      className={`task-card ${task.completed ? "completed" : ""} ${
+        isOverdue ? "overdue" : ""
+      }`}
+    >
+      {/* Row 1: Checkbox, Title, Priority, Actions */}
+      <div className="task-row task-row-main">
+        <div className="task-checkbox" onClick={onToggleComplete}>
+          {task.completed ? "✓" : ""}
+        </div>
+        <h3 className="task-title">{task.title}</h3>
+        <span className={`priority-badge priority-${task.priority}`}>
+          {priorityLabels[task.priority]}
+        </span>
+        <div className="task-actions">
+          <button className="btn-icon" onClick={onView} title="View">
+            👁
+          </button>
+          <button className="btn-icon" onClick={onEdit} title="Edit">
+            ✏️
+          </button>
+          <button className="btn-icon" onClick={onDelete} title="Delete">
+            🗑️
+          </button>
+        </div>
       </div>
 
-      <div className="task-content">
-        <div className="task-header">
-          <h3 className="task-title">{task.title}</h3>
-          <span
-            className="priority-badge"
-            style={{ backgroundColor: priorityColors[task.priority] }}
-          >
-            {priorityLabels[task.priority]}
+      {/* Row 2: Description */}
+      <div className="task-row task-row-middle">
+        <p className="task-description">{firstLineDescription}</p>
+      </div>
+
+      {/* Row 3: Labels + Dates */}
+      <div className="task-row task-row-bottom">
+        <div className="task-labels">
+          {labels.map((label) => (
+            <span key={label.id} className="task-label-compact">
+              <span
+                className="label-dot"
+                style={{ backgroundColor: label.color }}
+              />
+              {label.name}
+            </span>
+          ))}
+        </div>
+        <div className="task-dates">
+          <span className={`task-date ${isOverdue ? "overdue" : ""}`}>
+            📅 {formatDate(task.due_date)}
+          </span>
+          <span className={`task-date ${isReminder ? "active" : ""}`}>
+            🔔 {formatDate(task.reminder_date)}
+          </span>
+          <span className="task-date completed-date">
+            ✓ {formatDate(task.completed_at)}
           </span>
         </div>
-
-        {task.description && (
-          <p className="task-description">{task.description}</p>
-        )}
-
-        <div className="task-meta">
-          {labels.length > 0 && (
-            <div className="task-labels">
-              {labels.map((label) => (
-                <span
-                  key={label.id}
-                  className="task-label"
-                  style={{ backgroundColor: label.color }}
-                >
-                  {label.name}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="task-dates">
-            {task.due_date && (
-              <span className={`due-date ${isOverdue ? "overdue" : ""}`}>
-                📅 {formatDate(task.due_date)}
-              </span>
-            )}
-            {task.reminder_date && (
-              <span className={`reminder-date ${isReminder ? "active" : ""}`}>
-                🔔 {formatDate(task.reminder_date)}
-              </span>
-            )}
-            {task.completed_at && (
-              <span className="completed-date">
-                ✓ {formatDate(task.completed_at)}
-              </span>
-            )}
-          </div>
-        </div>
       </div>
 
-      <div className="task-actions">
-        <button className="btn-icon" onClick={onEdit} title="edit">
-          ✏️
-        </button>
-        <button className="btn-icon" onClick={onDelete} title="delete">
-          🗑️
-        </button>
-      </div>
     </div>
   );
 }
