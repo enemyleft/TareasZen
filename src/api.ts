@@ -65,10 +65,6 @@ export async function removeLabelFromTask(taskId: string, labelId: string): Prom
   return await invoke("remove_label_from_task", { taskId, labelId });
 }
 
-export async function getTasksByLabel(labelId: string): Promise<TaskWithLabels[]> {
-  return await invoke("get_tasks_by_label", { labelId });
-}
-
 // Settings API
 export async function getAllSettings(): Promise<[string, string][]> {
   return await invoke("get_all_settings");

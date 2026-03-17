@@ -1,4 +1,4 @@
-import { Label, ViewMode } from "../types";
+import { Label } from "../types";
 
 interface SidebarProps {
   labels: Label[];
@@ -6,8 +6,6 @@ interface SidebarProps {
   onSelectLabel: (labelId: string | null) => void;
   onManageLabels: () => void;
   onOpenSettings: () => void;
-  viewMode: ViewMode;
-  onViewModeChange: (mode: ViewMode) => void;
 }
 
 export function Sidebar({
@@ -16,8 +14,6 @@ export function Sidebar({
   onSelectLabel,
   onManageLabels,
   onOpenSettings,
-  viewMode,
-  onViewModeChange,
 }: SidebarProps) {
   return (
     <aside className="sidebar">
@@ -36,28 +32,13 @@ export function Sidebar({
         </section>
         
         <section className="nav-section">
-          <h3 className="nav-section-title">views</h3>
+          <h3 className="nav-section-title">view</h3>
           <button
-            className={`nav-item ${
-              viewMode === "all" && !selectedLabelId ? "active" : ""
-            }`}
-            onClick={() => {
-              onViewModeChange("all");
-              onSelectLabel(null);
-            }}
+            className={`nav-item ${!selectedLabelId ? "active" : ""}`}
+            onClick={() => onSelectLabel(null)}
           >
             <span className="nav-icon">📋</span>
             all tasks
-          </button>
-          <button
-            className={`nav-item ${viewMode === "by-label" && !selectedLabelId ? "active" : ""}`}
-            onClick={() => {
-              onViewModeChange("by-label");
-              onSelectLabel(null);
-            }}
-          >
-            <span className="nav-icon">🏷️</span>
-            by labels
           </button>
         </section>
 
@@ -72,10 +53,7 @@ export function Sidebar({
             <button
               key={label.id}
               className={`nav-item ${selectedLabelId === label.id ? "active" : ""}`}
-              onClick={() => {
-                onViewModeChange("all");
-                onSelectLabel(label.id);
-              }}
+              onClick={() => onSelectLabel(label.id)}
             >
               <span
                 className="label-dot"

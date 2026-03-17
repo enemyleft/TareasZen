@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { TaskWithLabels, Label, ViewMode, SortBy, SortOrder, TaskFilter } from "./types";
+import { TaskWithLabels, Label, SortBy, SortOrder, TaskFilter } from "./types";
 import * as api from "./api";
 import { TaskCard } from "./components/TaskCard";
 import { TaskForm } from "./components/TaskForm";
@@ -30,7 +30,6 @@ import { RecurringTaskManager } from "./components/RecurringTaskManager";
 function App() {
   const [tasks, setTasks] = useState<TaskWithLabels[]>([]);
   const [labels, setLabels] = useState<Label[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>("all");
   const [selectedLabelId, setSelectedLabelId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortBy>("due_date");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
@@ -318,14 +317,6 @@ function App() {
   // Tasks are already filtered and sorted by backend
   const filteredTasks = tasks;
 
-  // Group tasks by label for the by-label view
-  const tasksByLabel = labels.map((label) => ({
-    label,
-    tasks: tasks.filter((t) => t.labels.some((l) => l.id === label.id)),
-  }));
-
-  const unlabledTasks = tasks.filter((t) => t.labels.length === 0);
-
   return (
     <div className="app">
       <Sidebar
@@ -334,8 +325,6 @@ function App() {
         onSelectLabel={setSelectedLabelId}
         onManageLabels={() => setShowLabelManager(true)}
         onOpenSettings={() => setShowSettings(true)}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
       />
 
       <main className="main-content">
@@ -344,8 +333,6 @@ function App() {
           <h1>
             {selectedLabelId
               ? labels.find((l) => l.id === selectedLabelId)?.name
-              : viewMode === "by-label"
-              ? "All Labels"
               : "All Tasks"}
           </h1>
           <div className="header-actions">
@@ -374,81 +361,17 @@ function App() {
           setShowCompleted={setShowCompleted}
         />
 
-        {viewMode === "by-label" && !selectedLabelId ? (
-          <div className="label-groups">
-            {tasksByLabel.map(({ label, tasks: labelTasks }) => (
-              <div key={label.id} className="label-group">
-                <h2 className="label-group-title">
-                  <span
-                    className="label-dot"
-                    style={{ backgroundColor: label.color }}
-                  />
-                  {label.name}
-                  <span className="task-count">{labelTasks.length}</span>
-                </h2>
-                <div className="task-list">
-                  {labelTasks.map((taskWithLabels) => (
-                    <TaskCard
-                      key={taskWithLabels.task.id}
-                      taskWithLabels={taskWithLabels}
-                      onEdit={() => setEditingTask(taskWithLabels)}
-                      onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
-                      onToggleComplete={() =>
-                        handleToggleComplete(taskWithLabels)
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-            {unlabledTasks.length > 0 && (
-              <div className="label-group">
-                <h2 className="label-group-title">
-                  <span className="label-dot" style={{ backgroundColor: "#888" }} />
-                  without label
-                  <span className="task-count">{unlabledTasks.length}</span>
-                </h2>
-                <div className="task-list">
-                  {unlabledTasks.map((taskWithLabels) => (
-                    <TaskCard
-                      key={taskWithLabels.task.id}
-                      taskWithLabels={taskWithLabels}
-                      onEdit={() => setEditingTask(taskWithLabels)}
-                      onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
-                      onToggleComplete={() =>
-                        handleToggleComplete(taskWithLabels)
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={filteredTasks.map((t) => t.task.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="task-list">
-                {filteredTasks.map((taskWithLabels) => (
-                  <TaskCard
-                    key={taskWithLabels.task.id}
-                    taskWithLabels={taskWithLabels}
-                    onEdit={() => setEditingTask(taskWithLabels)}
-                    onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
-                    onToggleComplete={() => handleToggleComplete(taskWithLabels)}
-                    sortable={sortBy === "position"}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        )}
+        <div className="task-list">
+          {filteredTasks.map((taskWithLabels) => (
+            <TaskCard
+              key={taskWithLabels.task.id}
+              taskWithLabels={taskWithLabels}
+              onEdit={() => setEditingTask(taskWithLabels)}
+              onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
+              onToggleComplete={() => handleToggleComplete(taskWithLabels)}
+            />
+          ))}
+        </div>
 
         {filteredTasks.length === 0 && (
           <div className="empty-state">

@@ -23,7 +23,6 @@ export interface TaskWithLabels {
   labels: Label[];
 }
 
-export type ViewMode = 'all' | 'by-label' | 'completed';
 export type SortBy = 'position' | 'priority' | 'created_at' | 'due_date';
 export type SortOrder = 'asc' | 'desc';
 
