@@ -39,7 +39,7 @@ function App() {
         priority: filterPriority,
         completed: showCompleted,
         search: searchTerm.trim() || null,
-        sort_by: sortBy === "position" ? "created_at" : sortBy,
+        sort_by: sortBy,
         sort_order: sortOrder,
         limit: 1000,
       };
@@ -176,38 +176,6 @@ function App() {
     loadZenMode();
   }, [showSettings]); // Reload when settings close
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      const oldIndex = filteredTasks.findIndex((t) => t.task.id === active.id);
-      const newIndex = filteredTasks.findIndex((t) => t.task.id === over.id);
-
-      const reorderedTasks = arrayMove(filteredTasks, oldIndex, newIndex);
-      const positions: [string, number][] = reorderedTasks.map((t, idx) => [
-        t.task.id,
-        idx,
-      ]);
-
-      // Optimistic update
-      setTasks((prev) => {
-        const updated = [...prev];
-        positions.forEach(([id, pos]) => {
-          const task = updated.find((t) => t.task.id === id);
-          if (task) task.task.position = pos;
-        });
-        return updated;
-      });
-
-      try {
-        await api.updateTaskPositions(positions);
-      } catch (error) {
-        console.error("Failed to update positions:", error);
-        loadTasks();
-      }
-    }
-  };
-
   const handleCreateTask = async (
     title: string,
     description: string | null,
@@ -302,6 +270,7 @@ function App() {
         onSelectLabel={setSelectedLabelId}
         onManageLabels={() => setShowLabelManager(true)}
         onOpenSettings={() => setShowSettings(true)}
+        onLabelsReorder={loadLabels}
       />
 
       <main className="main-content">

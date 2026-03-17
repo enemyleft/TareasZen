@@ -975,3 +975,30 @@ body {
   color: var(--text-secondary);
   margin-bottom: 12px;
 }
+
+.drag-handle-label {
+  cursor: grab;
+  color: var(--text-muted);
+  padding: 4px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.drag-handle-label:active {
+  cursor: grabbing;
+}
+
+.label-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: 10px 0;
+  margin: -10px 0;
+}

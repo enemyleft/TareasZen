@@ -25,6 +25,7 @@ pub struct Label {
     pub name: String,
     pub color: String, // hex color
     pub created_at: String,
+    pub position: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -88,7 +89,8 @@ impl Database {
                 due_date TEXT,
                 reminder_date TEXT,
                 completed INTEGER NOT NULL DEFAULT 0,
-                completed_at TEXT
+                completed_at TEXT,
+                position INTEGER NOT NULL DEFAULT 0
             );
 
             CREATE TABLE IF NOT EXISTS labels (
@@ -284,9 +286,10 @@ impl Database {
 
     fn get_labels_for_task_internal(&self, conn: &Connection, task_id: &str) -> SqliteResult<Vec<Label>> {
         let mut stmt = conn.prepare(
-            "SELECT l.id, l.name, l.color, l.created_at FROM labels l 
-             INNER JOIN task_labels tl ON l.id = tl.label_id 
-             WHERE tl.task_id = ?1"
+            "SELECT l.id, l.name, l.color, l.created_at, l.position FROM labels l 
+            INNER JOIN task_labels tl ON l.id = tl.label_id 
+            WHERE tl.task_id = ?1
+            ORDER BY l.position"
         )?;
 
         let labels = stmt.query_map([task_id], |row| {
@@ -295,6 +298,7 @@ impl Database {
                 name: row.get(1)?,
                 color: row.get(2)?,
                 created_at: row.get(3)?,
+                position: row.get(4)?,
             })
         })?.filter_map(|r| r.ok()).collect();
 
@@ -323,9 +327,13 @@ impl Database {
         let id = Uuid::new_v4().to_string();
         let created_at = Utc::now().to_rfc3339();
 
+        let max_position: i32 = conn
+            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| row.get(0))
+            .unwrap_or(0);
+
         conn.execute(
-            "INSERT INTO labels (id, name, color, created_at) VALUES (?1, ?2, ?3, ?4)",
-            params![id, name, color, created_at],
+            "INSERT INTO labels (id, name, color, created_at, position) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![id, name, color, created_at, max_position + 1],
         )?;
 
         Ok(Label {
@@ -333,12 +341,13 @@ impl Database {
             name,
             color,
             created_at,
+            position: max_position + 1,
         })
     }
 
     pub fn get_all_labels(&self) -> SqliteResult<Vec<Label>> {
         let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name, color, created_at FROM labels ORDER BY name")?;
+        let mut stmt = conn.prepare("SELECT id, name, color, created_at, position FROM labels ORDER BY position, name")?;
 
         let labels = stmt.query_map([], |row| {
             Ok(Label {
@@ -346,6 +355,7 @@ impl Database {
                 name: row.get(1)?,
                 color: row.get(2)?,
                 created_at: row.get(3)?,
+                position: row.get(4)?,
             })
         })?.filter_map(|r| r.ok()).collect();
 
@@ -355,9 +365,17 @@ impl Database {
     pub fn update_label(&self, label: Label) -> SqliteResult<()> {
         let conn = self.conn.lock().unwrap();
         conn.execute(
-            "UPDATE labels SET name = ?1, color = ?2 WHERE id = ?3",
-            params![label.name, label.color, label.id],
+            "UPDATE labels SET name = ?1, color = ?2, position = ?3 WHERE id = ?4",
+            params![label.name, label.color, label.position, label.id],
         )?;
+        Ok(())
+    }
+
+    pub fn update_label_positions(&self, positions: Vec<(String, i32)>) -> SqliteResult<()> {
+        let conn = self.conn.lock().unwrap();
+        for (id, position) in positions {
+            conn.execute("UPDATE labels SET position = ?1 WHERE id = ?2", params![position, id])?;
+        }
         Ok(())
     }
 
@@ -620,13 +638,14 @@ impl Database {
         
         // Check if "auto" label exists
         let existing: Option<Label> = conn.query_row(
-            "SELECT id, name, color, created_at FROM labels WHERE name = 'auto'",
+            "SELECT id, name, color, created_at, position FROM labels WHERE name = 'auto'",
             [],
             |row| Ok(Label {
                 id: row.get(0)?,
                 name: row.get(1)?,
                 color: row.get(2)?,
                 created_at: row.get(3)?,
+                position: row.get(4)?,
             })
         ).ok();
 
@@ -639,9 +658,13 @@ impl Database {
         let created_at = Utc::now().to_rfc3339();
         let color = "#6b7280".to_string(); // gray
 
+        let max_position: i32 = conn
+            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| row.get(0))
+            .unwrap_or(0);
+
         conn.execute(
-            "INSERT INTO labels (id, name, color, created_at) VALUES (?1, 'auto', ?2, ?3)",
-            params![id, color, created_at],
+            "INSERT INTO labels (id, name, color, created_at, position) VALUES (?1, 'auto', ?2, ?3, ?4)",
+            params![id, color, created_at, max_position + 1],
         )?;
 
         Ok(Label {
@@ -649,6 +672,7 @@ impl Database {
             name: "auto".to_string(),
             color,
             created_at,
+            position: max_position + 1,
         })
     }
 

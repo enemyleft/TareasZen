@@ -72,6 +72,12 @@ fn update_label(state: State<Mutex<AppState>>, label: Label) -> Result<(), Strin
 }
 
 #[tauri::command]
+fn update_label_positions(state: State<Mutex<AppState>>, positions: Vec<(String, i32)>) -> Result<(), String> {
+    let state = state.lock().map_err(|e| e.to_string())?;
+    state.db.update_label_positions(positions).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 fn delete_label(state: State<Mutex<AppState>>, label_id: String) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
     state.db.delete_label(&label_id).map_err(|e| e.to_string())
@@ -217,6 +223,7 @@ fn main() {
             create_label,
             get_all_labels,
             update_label,
+            update_label_positions,
             delete_label,
             add_label_to_task,
             remove_label_from_task,

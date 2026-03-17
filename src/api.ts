@@ -48,6 +48,10 @@ export async function updateLabel(label: Label): Promise<void> {
   return await invoke("update_label", { label });
 }
 
+export async function updateLabelPositions(positions: [string, number][]): Promise<void> {
+  return await invoke("update_label_positions", { positions });
+}
+
 export async function deleteLabel(labelId: string): Promise<void> {
   return await invoke("delete_label", { labelId });
 }

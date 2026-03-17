@@ -15,6 +15,7 @@ export interface Label {
   name: string;
   color: string;
   created_at: string;
+  position: number;
 }
 
 export interface TaskWithLabels {
