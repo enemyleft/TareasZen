@@ -8,6 +8,7 @@ import { Sidebar } from "./components/Sidebar";
 import { FilterBar } from "./components/FilterBar";
 import { StartupNotification } from "./components/StartupNotifications";
 import { Settings } from "./components/Settings";
+import { TaskView } from "./components/TaskView";
 import { ZenDialog } from "./components/ZenDialog";
 import { RecurringTaskManager } from "./components/RecurringTaskManager";
 
@@ -31,6 +32,7 @@ function App() {
   const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString());
   const [showZenDialog, setShowZenDialog] = useState(false);
   const [zenModeEnabled, setZenModeEnabled] = useState(false);
+  const [viewingTask, setViewingTask] = useState<TaskWithLabels | null>(null);
 
   const loadTasks = useCallback(async () => {
     try {
@@ -313,7 +315,7 @@ function App() {
             <TaskCard
               key={taskWithLabels.task.id}
               taskWithLabels={taskWithLabels}
-              onView={() => {/* TODO: implement view */}}
+              onView={() => setViewingTask(taskWithLabels)}
               onEdit={() => setEditingTask(taskWithLabels)}
               onDelete={() => handleDeleteTask(taskWithLabels.task.id)}
               onToggleComplete={() => handleToggleComplete(taskWithLabels)}
@@ -364,6 +366,16 @@ function App() {
           labels={labels}
           onClose={() => setShowLabelManager(false)}
           onRefresh={() => { loadTasks(); loadLabels(); }}
+        />
+      )}
+      {viewingTask && (
+        <TaskView
+          taskWithLabels={viewingTask}
+          onClose={() => setViewingTask(null)}
+          onEdit={() => {
+            setEditingTask(viewingTask);
+            setViewingTask(null);
+          }}
         />
       )}
       {showSettings && (
