@@ -126,7 +126,7 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleDateString(undefined, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",

@@ -22,7 +22,7 @@ export function TaskCard({
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "--.--.--";
     const date = new Date(dateString);
-    return date.toLocaleDateString("de-CH", {
+    return date.toLocaleDateString(undefined, {
       day: "2-digit",
       month: "2-digit",
       year: "2-digit",

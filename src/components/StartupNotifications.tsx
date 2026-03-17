@@ -28,9 +28,22 @@ export function StartupNotification({
             <ul className="notification-list">
               {overdueTasks.map((t) => (
                 <li key={t.task.id} className="notification-item overdue">
-                  <span className="notification-title">{t.task.title}</span>
+                  <div className="notification-content">
+                    <span className="notification-title">{t.task.title}</span>
+                    <div className="notification-labels">
+                      {t.labels.map((label) => (
+                        <span key={label.id} className="notification-label">
+                          <span
+                            className="label-dot"
+                            style={{ backgroundColor: label.color }}
+                          />
+                          {label.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                   <span className="notification-date">
-                    {new Date(t.task.due_date!).toLocaleDateString("de-DE")}
+                    Due: {new Date(t.task.due_date!).toLocaleDateString()}
                   </span>
                 </li>
               ))}
@@ -46,9 +59,22 @@ export function StartupNotification({
             <ul className="notification-list">
               {reminderTasks.map((t) => (
                 <li key={t.task.id} className="notification-item reminder">
-                  <span className="notification-title">{t.task.title}</span>
+                  <div className="notification-content">
+                    <span className="notification-title">{t.task.title}</span>
+                    <div className="notification-labels">
+                      {t.labels.map((label) => (
+                        <span key={label.id} className="notification-label">
+                          <span
+                            className="label-dot"
+                            style={{ backgroundColor: label.color }}
+                          />
+                          {label.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                   <span className="notification-date">
-                    {new Date(t.task.reminder_date!).toLocaleDateString("de-DE")}
+                    {new Date(t.task.reminder_date!).toLocaleDateString("de-CH")}
                   </span>
                 </li>
               ))}
