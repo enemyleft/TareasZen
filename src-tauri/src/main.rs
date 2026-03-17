@@ -123,8 +123,9 @@ fn create_backup(state: State<Mutex<AppState>>, backup_path: String, db_path: St
 #[tauri::command]
 fn get_default_backup_path() -> Result<String, String> {
     dirs::document_dir()
+        .or_else(|| dirs::home_dir().map(|p| p.join("Documents")))
         .map(|p| p.join("TareasZen Backups").to_string_lossy().to_string())
-        .ok_or_else(|| "Could not determine documents directory".to_string())
+        .ok_or_else(|| "Could not determine backup directory".to_string())
 }
 
 #[tauri::command]
