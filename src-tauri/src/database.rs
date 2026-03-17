@@ -97,7 +97,8 @@ impl Database {
                 id TEXT PRIMARY KEY,
                 name TEXT NOT NULL UNIQUE,
                 color TEXT NOT NULL,
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                position INTEGER NOT NULL DEFAULT 0
             );
 
             CREATE TABLE IF NOT EXISTS task_labels (
