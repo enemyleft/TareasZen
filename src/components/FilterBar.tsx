@@ -26,7 +26,6 @@ export function FilterBar({
       <div className="filter-group">
         <label>sort by:</label>
         <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortBy)}>
-          <option value="position">position</option>
           <option value="priority">priority</option>
           <option value="created_at">created</option>
           <option value="due_date">due</option>

@@ -8,7 +8,6 @@ export interface Task {
   reminder_date: string | null;
   completed: boolean;
   completed_at: string | null;
-  position: number;
 }
 
 export interface Label {
@@ -23,7 +22,7 @@ export interface TaskWithLabels {
   labels: Label[];
 }
 
-export type SortBy = 'position' | 'priority' | 'created_at' | 'due_date';
+export type SortBy = 'priority' | 'created_at' | 'due_date';
 export type SortOrder = 'asc' | 'desc';
 
 export interface TaskFilter {

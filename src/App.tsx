@@ -1,20 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-
 import { TaskWithLabels, Label, SortBy, SortOrder, TaskFilter } from "./types";
 import * as api from "./api";
 import { TaskCard } from "./components/TaskCard";
@@ -47,13 +31,6 @@ function App() {
   const [lastNotificationDate, setLastNotificationDate] = useState<string>(new Date().toDateString());
   const [showZenDialog, setShowZenDialog] = useState(false);
   const [zenModeEnabled, setZenModeEnabled] = useState(false);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const loadTasks = useCallback(async () => {
     try {

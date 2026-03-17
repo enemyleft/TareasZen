@@ -1,5 +1,3 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { TaskWithLabels } from "../types";
 
 interface TaskCardProps {
@@ -7,7 +5,6 @@ interface TaskCardProps {
   onEdit: () => void;
   onDelete: () => void;
   onToggleComplete: () => void;
-  sortable?: boolean;
 }
 
 const priorityLabels = ["", "low", "medium", "high"];
@@ -18,26 +15,8 @@ export function TaskCard({
   onEdit,
   onDelete,
   onToggleComplete,
-  sortable = false,
 }: TaskCardProps) {
   const { task, labels } = taskWithLabels;
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id, disabled: !sortable });
-
-  const style = sortable
-    ? {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-      }
-    : {};
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null;
@@ -56,18 +35,11 @@ export function TaskCard({
     task.reminder_date && !task.completed && new Date(task.reminder_date) <= new Date();
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`task-card ${task.completed ? "completed" : ""} ${
-        isOverdue ? "overdue" : "" 
-      } ${ isReminder && !isOverdue ? "remind" : ""} `} 
-    >
-      {sortable && (
-        <div className="drag-handle" {...attributes} {...listeners}>
-          ⠿
-        </div>
-      )}
+      <div
+        className={`task-card ${task.completed ? "completed" : ""} ${
+          isOverdue ? "overdue" : ""
+        }`}
+      >
 
       <div className="task-checkbox" onClick={onToggleComplete}>
         {task.completed ? "✓" : ""}

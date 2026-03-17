@@ -17,7 +17,6 @@ pub struct Task {
     pub reminder_date: Option<String>,
     pub completed: bool,
     pub completed_at: Option<String>,
-    pub position: i32, // for drag & drop ordering
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -89,8 +88,7 @@ impl Database {
                 due_date TEXT,
                 reminder_date TEXT,
                 completed INTEGER NOT NULL DEFAULT 0,
-                completed_at TEXT, 
-                position INTEGER NOT NULL DEFAULT 0
+                completed_at TEXT
             );
 
             CREATE TABLE IF NOT EXISTS labels (
@@ -150,14 +148,10 @@ impl Database {
         let conn = self.conn.lock().unwrap();
         let id = Uuid::new_v4().to_string();
         let created_at = Utc::now().to_rfc3339();
-        
-        let max_position: i32 = conn
-            .query_row("SELECT COALESCE(MAX(position), 0) FROM tasks", [], |row| row.get(0))
-            .unwrap_or(0);
 
         conn.execute(
-            "INSERT INTO tasks (id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 0, NULL, ?8)",
-            params![id, title, description, priority, created_at, due_date, reminder_date, max_position + 1],
+            "INSERT INTO tasks (id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, 0, NULL)",
+            params![id, title, description, priority, created_at, due_date, reminder_date],
         )?;
 
         Ok(Task {
@@ -170,7 +164,6 @@ impl Database {
             reminder_date,
             completed: false,
             completed_at: None,
-            position: max_position + 1,
         })
     }
 
@@ -184,7 +177,7 @@ impl Database {
         // Build query dynamically
         let mut sql = String::from(
             "SELECT DISTINCT t.id, t.title, t.description, t.priority, t.created_at, 
-            t.due_date, t.reminder_date, t.completed, t.completed_at, t.position
+            t.due_date, t.reminder_date, t.completed, t.completed_at
             FROM tasks t"
         );
         
@@ -274,7 +267,6 @@ impl Database {
                 reminder_date: row.get(6)?,
                 completed: row.get::<_, i32>(7)? != 0,
                 completed_at: row.get(8)?,
-                position: row.get(9)?,
             })
         })?.filter_map(|r| r.ok()).collect();
         
@@ -312,8 +304,8 @@ impl Database {
     pub fn update_task(&self, task: Task) -> SqliteResult<()> {
         let conn = self.conn.lock().unwrap();
         conn.execute(
-            "UPDATE tasks SET title = ?1, description = ?2, priority = ?3, due_date = ?4, reminder_date = ?5, completed = ?6, completed_at = ?7, position = ?8 WHERE id = ?9",
-            params![task.title, task.description, task.priority, task.due_date, task.reminder_date, task.completed as i32, task.completed_at, task.position, task.id],
+            "UPDATE tasks SET title = ?1, description = ?2, priority = ?3, due_date = ?4, reminder_date = ?5, completed = ?6, completed_at = ?7 WHERE id = ?8",
+            params![task.title, task.description, task.priority, task.due_date, task.reminder_date, task.completed as i32, task.completed_at, task.id],
         )?;
         Ok(())
     }
@@ -322,14 +314,6 @@ impl Database {
         let conn = self.conn.lock().unwrap();
         conn.execute("DELETE FROM task_labels WHERE task_id = ?1", [task_id])?;
         conn.execute("DELETE FROM tasks WHERE id = ?1", [task_id])?;
-        Ok(())
-    }
-
-    pub fn update_task_positions(&self, positions: Vec<(String, i32)>) -> SqliteResult<()> {
-        let conn = self.conn.lock().unwrap();
-        for (id, position) in positions {
-            conn.execute("UPDATE tasks SET position = ?1 WHERE id = ?2", params![position, id])?;
-        }
         Ok(())
     }
 
@@ -403,42 +387,6 @@ impl Database {
         Ok(())
     }
 
-    pub fn get_tasks_by_label(&self, label_id: &str) -> SqliteResult<Vec<TaskWithLabels>> {
-        let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare(
-            "SELECT t.id, t.title, t.description, t.priority, t.created_at, t.due_date, t.reminder_date, t.completed, t.completed_at, t.position 
-             FROM tasks t
-             INNER JOIN task_labels tl ON t.id = tl.task_id
-             WHERE tl.label_id = ?1
-             ORDER BY t.position"
-        )?;
-
-        let tasks: Vec<Task> = stmt.query_map([label_id], |row| {
-            Ok(Task {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                created_at: row.get(4)?,
-                due_date: row.get(5)?,
-                reminder_date: row.get(6)?,
-                completed: row.get::<_, i32>(7)? != 0,
-                completed_at: row.get(8)?,
-                position: row.get(9)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
-
-        drop(stmt);
-
-        let mut result = Vec::new();
-        for task in tasks {
-            let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
-            result.push(TaskWithLabels { task, labels });
-        }
-
-        Ok(result)
-    }
-
     // Settings operations
     pub fn get_setting(&self, key: &str) -> SqliteResult<Option<String>> {
         let conn = self.conn.lock().unwrap();
@@ -492,7 +440,7 @@ impl Database {
         
         // Overdue tasks
         let mut stmt = conn.prepare(
-            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position
+            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at
             FROM tasks 
             WHERE completed = 0 AND due_date IS NOT NULL AND due_date < ?1
             ORDER BY due_date ASC"
@@ -509,7 +457,6 @@ impl Database {
                 reminder_date: row.get(6)?,
                 completed: row.get::<_, i32>(7)? != 0,
                 completed_at: row.get(8)?,
-                position: row.get(9)?,
             })
         })?.filter_map(|r| r.ok()).collect();
         
@@ -517,7 +464,7 @@ impl Database {
         
         // Reminder tasks (not already in overdue)
         let mut stmt = conn.prepare(
-            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at, position
+            "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at
             FROM tasks 
             WHERE completed = 0 AND reminder_date IS NOT NULL AND reminder_date <= ?1
             AND (due_date IS NULL OR due_date >= ?1)
@@ -535,7 +482,6 @@ impl Database {
                 reminder_date: row.get(6)?,
                 completed: row.get::<_, i32>(7)? != 0,
                 completed_at: row.get(8)?,
-                position: row.get(9)?,
             })
         })?.filter_map(|r| r.ok()).collect();
         

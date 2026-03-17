@@ -35,10 +35,6 @@ export async function deleteTask(taskId: string): Promise<void> {
   return await invoke("delete_task", { taskId });
 }
 
-export async function updateTaskPositions(positions: [string, number][]): Promise<void> {
-  return await invoke("update_task_positions", { positions });
-}
-
 // Label API
 export async function createLabel(name: string, color: string): Promise<Label> {
   return await invoke("create_label", { name, color });
