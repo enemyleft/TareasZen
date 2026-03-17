@@ -1,53 +1,101 @@
 # TareasZen
 
-A local task management app built with Tauri and React. No cloud, no accounts, your data stays on your machine.
+A local-first task management app built with Rust, Tauri, and React. No cloud, no accounts — your data stays on your machine.
 
-## What it does
+## Features
 
-Create tasks with title, description, priority, due date and reminders. Organize them with labels (a task can have multiple labels). Filter and sort by what matters. Get notified about overdue tasks and reminders when you open the app.
+### Task Management
+- Create tasks with title, description, priority, due date, and reminder date
+- Mark tasks as complete with automatic timestamp
+- Filter by label, priority, and completion status
+- Sort by priority, due date, or creation date
+- Full-text search across titles and descriptions
 
-Automatic backups can be configured to run in the background.
+### Labels
+- Organize tasks with multiple labels (many-to-many)
+- Drag and drop to reorder labels in the sidebar
+- Color-coded labels for visual organization
+
+### Recurring Tasks
+- Create tasks that repeat automatically
+- Flexible intervals: daily, weekly, monthly, or specific day of month
+- Optional end date
+- Pause and resume recurring tasks
+- Auto-generated tasks receive an "auto" label
+
+### Mindfulness (Zen Mode)
+- Optional mindfulness reminders after completing tasks
+- Periodic reminders at configurable intervals (default: 42 minutes)
+- Gentle prompts to take breaks, stretch, and breathe
+
+### Backup
+- Automatic backups at configurable intervals
+- Custom backup location
+- Manual backup option
+
+### Notifications
+- Startup notifications for overdue tasks and active reminders
+- Periodic check for new notifications (even if app runs for days)
 
 ## Tech Stack
 
-Rust backend with SQLite database. React/TypeScript frontend. Packaged as a native desktop app via Tauri.
+- **Backend**: Rust with SQLite database
+- **Frontend**: React with TypeScript
+- **Framework**: Tauri (lightweight, native desktop app)
+- **Styling**: Custom CSS with dark theme
 
-Runs on Linux and Windows.
+## Supported Platforms
 
-## Building from source
+- Linux (requires WebKitGTK)
+- Windows (WebView2 included in Windows 10/11)
 
-You'll need Rust, Node.js, and some system dependencies. See SETUP.md for detailed instructions per platform.
+## Installation
+
+### Pre-built Binaries
+
+Download the latest release from the [Releases](https://github.com/yourusername/tareaszen/releases) page.
+
+### Building from Source
+
+See [SETUP.md](SETUP.md) for detailed build instructions.
 
 Quick start:
 
 ```bash
+# Install dependencies
 npm install
+
+# Development mode
 npm run tauri dev
-```
 
-Production build:
-
-```bash
+# Production build
 npm run tauri build
 ```
 
-The binary ends up in `src-tauri/target/release/`.
-
-## Project structure
+## Project Structure
 
 ```
 src/                    React frontend
-src-tauri/src/          Rust backend
-  database.rs           SQLite operations
-  main.rs               Tauri commands
+  components/           UI components
+  api.ts                Tauri API calls
+  types.ts              TypeScript types
+  App.tsx               Main application
+  styles.css            Styling
+
+src-tauri/              Rust backend
+  src/
+    database.rs         SQLite operations
+    main.rs             Tauri commands
 ```
 
-## Database
+## Data Storage
 
-SQLite file stored in your local app data folder:
+Your data is stored locally in a SQLite database:
 
-- Linux: `~/.local/share/tareaszen/`
-- Windows: `%LOCALAPPDATA%\tareaszen\`
+- **Linux**: `~/.local/share/tareaszen/tareaszen.db`
+- **Windows**: `%LOCALAPPDATA%\tareaszen\tareaszen.db`
+
+Backups are stored in your configured backup location (default: `Documents/TareasZen Backups`).
 
 ## License
 
