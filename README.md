@@ -53,7 +53,7 @@ A local-first task management app built with Rust, Tauri, and React. No cloud, n
 
 ### Pre-built Binaries
 
-Download the latest release from the [Releases](https://github.com/yourusername/tareaszen/releases) page.
+Download the latest release from the [Releases](https://github.com/enemyleft/tareaszen/releases) page.
 
 ### Building from Source
 
