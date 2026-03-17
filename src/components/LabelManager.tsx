@@ -70,14 +70,14 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
   return (
     <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
-        <h2>Labels verwalten</h2>
+        <h2>Manage labels</h2>
 
         <form className="new-label-form" onSubmit={handleCreateLabel}>
           <input
             type="text"
             value={newLabelName}
             onChange={(e) => setNewLabelName(e.target.value)}
-            placeholder="Neues Label..."
+            placeholder="new label..."
           />
           <div className="color-picker">
             {defaultColors.map((color) => (
@@ -93,7 +93,7 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
             ))}
           </div>
           <button type="submit" className="btn-primary">
-            Hinzufügen
+            Add
           </button>
         </form>
 
@@ -161,13 +161,13 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
           ))}
 
           {labels.length === 0 && (
-            <p className="empty-state">Noch keine Labels erstellt</p>
+            <p className="empty-state">No labels created yet</p>
           )}
         </div>
 
         <div className="form-actions">
           <button className="btn-secondary" onClick={onClose}>
-            Schließen
+            Close
           </button>
         </div>
       </div>

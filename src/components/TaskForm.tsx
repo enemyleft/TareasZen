@@ -62,7 +62,7 @@ export function TaskForm({
   return (
     <div className="modal-overlay">
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>{isEditing ? "Task bearbeiten" : "Neuer Task"}</h2>
+        <h2>{isEditing ? "Edit task" : "New task"}</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
