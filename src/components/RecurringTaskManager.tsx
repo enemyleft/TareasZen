@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Pencil, Trash } from "lucide-react";
 import { RecurringTask } from "../types";
 import { RecurringTaskForm } from "./RecurringTaskForm";
 import * as api from "../api";
@@ -186,14 +187,14 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
                     onClick={() => setEditingTask(task)}
                     title="Edit"
                   >
-                    ✏️
+                    <Pencil size={16} />
                   </button>
                   <button
                     className="btn-icon"
                     onClick={() => handleDelete(task.id)}
                     title="Delete"
                   >
-                    🗑️
+                    <Trash size={16} />
                   </button>
                 </div>
               </div>

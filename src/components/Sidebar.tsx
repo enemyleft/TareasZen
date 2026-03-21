@@ -1,3 +1,4 @@
+import { Settings, ClipboardList } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -124,7 +125,9 @@ export function Sidebar({
         
         <section className="nav-section">
           <button className="nav-item" onClick={onOpenSettings}>
-            <span className="nav-icon">⚙️</span>
+            <span className="nav-icon">
+              <Settings size={16} />
+            </span>
             Settings
           </button>
         </section>
@@ -135,7 +138,9 @@ export function Sidebar({
             className={`nav-item ${!selectedLabelId ? "active" : ""}`}
             onClick={() => onSelectLabel(null)}
           >
-            <span className="nav-icon">📋</span>
+            <span className="nav-icon">
+              <ClipboardList size={16} />
+            </span>
             All Tasks
           </button>
         </section>
@@ -143,8 +148,8 @@ export function Sidebar({
         <section className="nav-section">
           <div className="nav-section-header">
             <h3 className="nav-section-title">Labels</h3>
-            <button className="btn-icon-small" onClick={onManageLabels} title="Manage labels">
-              ⚙️
+            <button className="btn-icon" onClick={onManageLabels} title="Manage labels">
+              <Settings size={16} />
             </button>
           </div>
           <DndContext
