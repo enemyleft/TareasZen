@@ -1,3 +1,4 @@
+import { Bell, Calendar, CalendarPlus } from "lucide-react";
 import { TaskWithLabels } from "../types";
 
 interface TaskViewProps {
@@ -75,15 +76,15 @@ export function TaskView({ taskWithLabels, onClose, onEdit }: TaskViewProps) {
           <h3>Dates</h3>
           <div className="task-view-dates">
             <div className="task-view-date">
-              <span className="task-view-date-label">📅 Due</span>
+              <span className="task-view-date-label due"><Calendar size={16} /> Due</span>
               <span className="task-view-date-value">{formatDate(task.due_date)}</span>
             </div>
             <div className="task-view-date">
-              <span className="task-view-date-label">🔔 Reminder</span>
+              <span className="task-view-date-label reminder"><Bell size={16} /> Reminder</span>
               <span className="task-view-date-value">{formatDate(task.reminder_date)}</span>
             </div>
             <div className="task-view-date">
-              <span className="task-view-date-label">📝 Created</span>
+              <span className="task-view-date-label created"><CalendarPlus size={16} /> Created</span>
               <span className="task-view-date-value">{formatDateTime(task.created_at)}</span>
             </div>
           </div>

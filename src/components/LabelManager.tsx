@@ -1,3 +1,4 @@
+import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { Label } from "../types";
 import * as api from "../api";
@@ -146,13 +147,13 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
                       className="btn-icon"
                       onClick={() => setEditingLabel(label)}
                     >
-                      ✏️
+                      <Pencil size={16} />
                     </button>
                     <button
                       className="btn-icon"
                       onClick={() => handleDelete(label)}
                     >
-                      🗑️
+                      <Trash size={16} />
                     </button>
                   </div>
                 </>

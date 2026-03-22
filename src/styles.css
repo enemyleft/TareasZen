@@ -36,6 +36,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+input[type="date"] {
+  color-scheme: dark;
+}
+
 /* App Layout */
 .app {
   display: flex;
@@ -124,6 +128,8 @@ body {
 }
 
 .nav-icon {
+  display: flex;
+  align-items: center;
   font-size: 1.1rem;
 }
 
@@ -422,6 +428,9 @@ body {
 }
 
 .task-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 0.8rem;
   color: var(--text-muted);
   min-width: 90px;
@@ -432,9 +441,21 @@ body {
   font-weight: 500;
 }
 
+.task-date.hasDueDate {
+  color: var(--success);
+  font-weight: 500;
+}
+
 .task-date.active {
   color: var(--warning);
   font-weight: 500;
+}
+.task-date.hasReminder svg {
+  color: var(--warning);
+}
+
+.task-date.active svg {
+  fill: currentColor;
 }
 
 .task-date.completed-date {
@@ -569,6 +590,10 @@ body {
 }
 
 .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
   padding: 6px;
   background: none;
   border: none;
@@ -580,22 +605,6 @@ body {
 
 .btn-icon:hover {
   background: var(--bg-hover);
-}
-
-.btn-icon-small {
-  padding: 4px 8px;
-  background: none;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  transition: all var(--transition);
-}
-
-.btn-icon-small:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
 }
 
 /* Modal */
@@ -847,6 +856,15 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .notification-section-title.overdue {
@@ -1098,6 +1116,10 @@ body {
   margin-bottom: 12px;
 }
 
+.nav-item.active .drag-handle-label {
+  color: var(--text-primary);
+}
+
 .drag-handle-label {
   cursor: grab;
   color: var(--text-muted);
@@ -1248,6 +1270,22 @@ body {
   font-size: 0.9rem;
   color: var(--text-muted);
   min-width: 120px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-view-date-label.due svg {
+  color: var(--danger);
+}
+
+.task-view-date-label.reminder svg {
+  color: var(--warning);
+  fill: currentColor;
+}
+
+.task-view-date-label.created svg {
+  color: var(--success);
 }
 
 .task-view-date-value {

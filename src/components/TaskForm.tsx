@@ -66,7 +66,7 @@ export function TaskForm({
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title">Titel *</label>
+            <label htmlFor="title">Title *</label>
             <input
               id="title"
               type="text"

@@ -1,3 +1,4 @@
+import { ArrowDownWideNarrow, ArrowUpNarrowWide } from "lucide-react";
 import { SortBy, SortOrder } from "../types";
 
 interface FilterBarProps {
@@ -31,11 +32,15 @@ export function FilterBar({
           <option value="due_date">due</option>
         </select>
         <button
-          className="btn-icon-small"
+          className="btn-icon"
           onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
           title={sortOrder === "asc" ? "Ascending" : "Descending"}
         >
-          {sortOrder === "asc" ? "↑" : "↓"}
+          {sortOrder === "asc" ? (
+            <ArrowUpNarrowWide size={16} />
+          ) : (
+            <ArrowDownWideNarrow size={16} />
+          )}
         </button>
       </div>
 
