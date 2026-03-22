@@ -1,3 +1,5 @@
+import monk from "../assets/monk3.png";
+
 interface ZenDialogProps {
   onClose: () => void;
   type: "task" | "periodic";
@@ -46,7 +48,9 @@ export function ZenDialog({ onClose, type }: ZenDialogProps) {
   return (
     <div className="modal-overlay">
       <div className="modal zen-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="zen-icon">🧘‍♀️</div>
+        <div className="zen-icon">
+          <img src={monk} alt="Zen Monk" width="200" height="200"/>
+        </div>
         <p className="zen-message">{message}</p>
         <button className="btn-primary" onClick={onClose}>
           Continue

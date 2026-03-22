@@ -1,3 +1,4 @@
+import { Pause, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { RecurringTask } from "../types";
@@ -180,7 +181,11 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
                     onClick={() => handleToggleActive(task)}
                     title={task.is_active ? "Pause" : "Resume"}
                   >
-                    {task.is_active ? "⏸️" : "▶️"}
+                    {task.is_active ? (
+                      <Pause size={16} />
+                    ) : (
+                      <Play size={16} />
+                    )}
                   </button>
                   <button
                     className="btn-icon"
