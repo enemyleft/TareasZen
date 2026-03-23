@@ -1,0 +1,1 @@
+/*eslint-disable*/import type{Messages}from"@lingui/core";export const messages=JSON.parse("{\"BOWzss\":[\"<0>Es wurden keine Aufgaben gefunden</0>\"],\"EE/dSf\":[\"+ Neue Aufgabe\"],\"EgzBur\":[\"Suchaufgaben...\"],\"EpiI6Y\":[\"<0>Erste Aufgabe erstellen</0>\"],\"R4twK2\":[\"Diese Aufgabe löschen?\"]}")as Messages;

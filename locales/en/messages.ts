@@ -1,0 +1,1 @@
+/*eslint-disable*/import type{Messages}from"@lingui/core";export const messages=JSON.parse("{\"BOWzss\":[\"<0>no tasks found</0>\"],\"EE/dSf\":[\"+ New Task\"],\"EgzBur\":[\"Search tasks...\"],\"EpiI6Y\":[\"<0>create first task</0>\"],\"R4twK2\":[\"Delete this task?\"]}")as Messages;
