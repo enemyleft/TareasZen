@@ -1,5 +1,6 @@
 /* CSS Variables */
 :root {
+  color-scheme: dark;
   --bg-primary: #0f0f0f;
   --bg-secondary: #1a1a1a;
   --bg-tertiary: #252525;
@@ -34,10 +35,6 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-}
-
-input[type="date"] {
-  color-scheme: dark;
 }
 
 /* App Layout */
