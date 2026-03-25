@@ -23,7 +23,7 @@ export interface TaskWithLabels {
   labels: Label[];
 }
 
-export type SortBy = 'priority' | 'created_at' | 'due_date';
+export type SortBy = 'priority' | 'created_at' | 'due_date' | 'completed_at';
 export type SortOrder = 'asc' | 'desc';
 
 export interface TaskFilter {

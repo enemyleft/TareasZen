@@ -30,6 +30,7 @@ export function FilterBar({
           <option value="priority">priority</option>
           <option value="created_at">created</option>
           <option value="due_date">due</option>
+          <option value="completed_at">completed</option>
         </select>
         <button
           className="btn-icon"
