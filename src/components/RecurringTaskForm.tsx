@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { RecurringTask } from "../types";
 
 interface RecurringTaskFormProps {
@@ -22,6 +23,7 @@ export function RecurringTaskForm({
   onCancel,
 }: RecurringTaskFormProps) {
   const isEditing = !!recurringTask;
+  const { t } = useLingui();
 
   const [title, setTitle] = useState(recurringTask?.title || "");
   const [description, setDescription] = useState(recurringTask?.description || "");
@@ -57,62 +59,72 @@ export function RecurringTaskForm({
   return (
     <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
-        <h2>{isEditing ? "Edit Recurring Task" : "New Recurring Task"}</h2>
+        <h2>{isEditing ? t`Edit Recurring Task` : t`New Recurring Task`}</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="rt-title">Title *</label>
+            <Trans>
+              <label htmlFor="rt-title">Title *</label>
+            </Trans>
             <input
               id="rt-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Task title..."
+              placeholder={t`Task title...`}
               autoFocus
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="rt-description">Description</label>
+            <Trans>
+              <label htmlFor="rt-description">Description</label>
+            </Trans>
             <textarea
               id="rt-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional description..."
+              placeholder={t`Optional description...`}
               rows={2}
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="rt-priority">Priority</label>
+              <Trans>
+                <label htmlFor="rt-priority">Priority</label>
+              </Trans>
               <select
                 id="rt-priority"
                 value={priority}
                 onChange={(e) => setPriority(Number(e.target.value))}
               >
-                <option value={1}>Low</option>
-                <option value={2}>Medium</option>
-                <option value={3}>High</option>
+                <option value={1}>{t`Low`}</option>
+                <option value={2}>{t`Medium`}</option>
+                <option value={3}>{t`High`}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="rt-due-offset">Due after (days)</label>
+              <Trans>
+                <label htmlFor="rt-due-offset">Due after (days)</label>
+              </Trans>
               <input
                 id="rt-due-offset"
                 type="number"
                 min="0"
                 value={dueDateOffset}
                 onChange={(e) => setDueDateOffset(e.target.value)}
-                placeholder="Optional"
+                placeholder={t`Optional`}
               />
             </div>
           </div>
 
           <div className="form-group">
-            <label>Repeat every</label>
+            <Trans>
+              <label>Repeat every</label>
+            </Trans>
             <div className="interval-row">
               {intervalUnit === "day_of_month" ? (
                 <select
@@ -144,17 +156,17 @@ export function RecurringTaskForm({
                 }}
                 className="interval-unit"
               >
-                <option value="days">Days</option>
-                <option value="weeks">Weeks</option>
-                <option value="months">Months</option>
-                <option value="day_of_month">Day of month</option>
+                <option value="days">{t`Days`}</option>
+                <option value="weeks">{t`Weeks`}</option>
+                <option value="months">{t`Months`}</option>
+                <option value="day_of_month">{t`Day of month`}</option>
               </select>
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="rt-start">Start date *</label>
+              <label htmlFor="rt-start">{t`Start date *`}</label>
               <input
                 id="rt-start"
                 type="date"
@@ -165,7 +177,7 @@ export function RecurringTaskForm({
             </div>
 
             <div className="form-group">
-              <label htmlFor="rt-end">End date</label>
+              <label htmlFor="rt-end">{t`End date`}</label>
               <input
                 id="rt-end"
                 type="date"
@@ -177,10 +189,12 @@ export function RecurringTaskForm({
 
           <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onCancel}>
-              Cancel
+              <Trans>
+                Cancel
+              </Trans>
             </button>
             <button type="submit" className="btn-primary">
-              {isEditing ? "Save" : "Create"}
+              {isEditing ? t`Save` : t`Create`}
             </button>
           </div>
         </form>

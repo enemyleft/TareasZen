@@ -61,12 +61,12 @@ msgstr "Ya está. Mueve suavemente el cuello."
 msgid "Add"
 msgstr ""
 
-#: src/components/FilterBar.tsx:57
-#: src/components/FilterBar.tsx:72
+#: src/components/FilterBar.tsx:59
+#: src/components/FilterBar.tsx:74
 msgid "All"
 msgstr ""
 
-#: src/components/FilterBar.tsx:39
+#: src/components/FilterBar.tsx:41
 msgid "Ascending"
 msgstr ""
 
@@ -87,7 +87,11 @@ msgstr ""
 msgid "Complete. Stand up and stretch."
 msgstr "Ya está. Levántate y estírate."
 
-#: src/components/FilterBar.tsx:74
+#: src/components/FilterBar.tsx:36
+msgid "completed"
+msgstr ""
+
+#: src/components/FilterBar.tsx:76
 msgid "Completed"
 msgstr ""
 
@@ -134,7 +138,7 @@ msgstr ""
 msgid "Delete this task?"
 msgstr "¿Quieres eliminar esta tarea?"
 
-#: src/components/FilterBar.tsx:39
+#: src/components/FilterBar.tsx:41
 msgid "Descending"
 msgstr ""
 
@@ -180,7 +184,7 @@ msgstr ""
 msgid "Great. How about a cup of tea?"
 msgstr ""
 
-#: src/components/FilterBar.tsx:58
+#: src/components/FilterBar.tsx:60
 #: src/components/RecurringTaskManager.tsx:22
 msgid "High"
 msgstr ""
@@ -197,7 +201,7 @@ msgstr ""
 msgid "Look away from the screen for 20 seconds."
 msgstr ""
 
-#: src/components/FilterBar.tsx:60
+#: src/components/FilterBar.tsx:62
 #: src/components/RecurringTaskManager.tsx:22
 msgid "Low"
 msgstr ""
@@ -206,7 +210,7 @@ msgstr ""
 msgid "Manage labels"
 msgstr ""
 
-#: src/components/FilterBar.tsx:59
+#: src/components/FilterBar.tsx:61
 #: src/components/RecurringTaskManager.tsx:22
 msgid "Medium"
 msgstr ""
@@ -239,7 +243,7 @@ msgstr ""
 msgid "Notice your breathing. Slow it down."
 msgstr ""
 
-#: src/components/FilterBar.tsx:73
+#: src/components/FilterBar.tsx:75
 msgid "Open"
 msgstr ""
 
@@ -255,12 +259,16 @@ msgstr ""
 msgid "priority"
 msgstr ""
 
-#: src/components/FilterBar.tsx:50
+#: src/components/FilterBar.tsx:52
 msgid "Priority:"
 msgstr ""
 
 #: src/components/ZenDialog.tsx:41
 msgid "Relax your face muscles. Unclench your jaw."
+msgstr ""
+
+#: src/components/FilterBar.tsx:35
+msgid "reminder"
 msgstr ""
 
 #: src/components/ZenDialog.tsx:33
@@ -287,7 +295,7 @@ msgstr "Buscar tareas..."
 msgid "sort by:"
 msgstr ""
 
-#: src/components/FilterBar.tsx:65
+#: src/components/FilterBar.tsx:67
 msgid "Status:"
 msgstr ""
 
