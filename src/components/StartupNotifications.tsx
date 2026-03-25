@@ -1,3 +1,4 @@
+import { ClipboardClock, TriangleAlert, Bell } from "lucide-react";
 import { TaskWithLabels } from "../types";
 
 interface StartupNotificationProps {
@@ -18,12 +19,12 @@ export function StartupNotification({
   return (
     <div className="modal-overlay">
       <div className="modal notification-modal" onClick={(e) => e.stopPropagation()}>
-        <h2>📋 Reminders</h2>
+        <h2 className="notification-section-header"><ClipboardClock size={16}/> Reminders</h2>
 
         {overdueTasks.length > 0 && (
           <div className="notification-section">
             <h3 className="notification-section-title overdue">
-              ⚠️ Due / Overdue ({overdueTasks.length})
+              <TriangleAlert size={16} /> Due / Overdue ({overdueTasks.length})
             </h3>
             <ul className="notification-list">
               {overdueTasks.map((t) => (
@@ -54,7 +55,7 @@ export function StartupNotification({
         {reminderTasks.length > 0 && (
           <div className="notification-section">
             <h3 className="notification-section-title reminder">
-              🔔 Reminders ({reminderTasks.length})
+              <Bell size={16} /> Reminders ({reminderTasks.length})
             </h3>
             <ul className="notification-list">
               {reminderTasks.map((t) => (

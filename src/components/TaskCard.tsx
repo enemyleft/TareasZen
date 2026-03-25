@@ -1,3 +1,5 @@
+import classnames from "classnames";
+import { Eye, Pencil, Trash, Check, Bell, Calendar, CalendarClock } from "lucide-react";
 import { TaskWithLabels } from "../types";
 
 interface TaskCardProps {
@@ -56,13 +58,13 @@ export function TaskCard({
         </span>
         <div className="task-actions">
           <button className="btn-icon" onClick={onView} title="View">
-            👁
+            <Eye size={16} />
           </button>
           <button className="btn-icon" onClick={onEdit} title="Edit">
-            ✏️
+            <Pencil size={16} />
           </button>
           <button className="btn-icon" onClick={onDelete} title="Delete">
-            🗑️
+            <Trash size={16} />
           </button>
         </div>
       </div>
@@ -86,14 +88,20 @@ export function TaskCard({
           ))}
         </div>
         <div className="task-dates">
-          <span className={`task-date ${isOverdue ? "overdue" : ""}`}>
-            📅 {formatDate(task.due_date)}
+          <span className={classnames("task-date", {
+            "overdue": isOverdue,
+            "hasDueDate": !!task.due_date && !isOverdue,
+          })}>
+            {isOverdue ? (<CalendarClock size={16} />) : (<Calendar size={16} />)} {formatDate(task.due_date)}
           </span>
-          <span className={`task-date ${isReminder ? "active" : ""}`}>
-            🔔 {formatDate(task.reminder_date)}
+          <span className={classnames("task-date",{
+            "active": isReminder,
+            "hasReminder": !!task.reminder_date && !isReminder,
+          })}>
+            <Bell size={16} /> {formatDate(task.reminder_date)}
           </span>
           <span className="task-date completed-date">
-            ✓ {formatDate(task.completed_at)}
+            <Check size={16} /> {formatDate(task.completed_at)}
           </span>
         </div>
       </div>
