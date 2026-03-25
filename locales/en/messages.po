@@ -13,6 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: task.end_date && <span>End: {formatDate(task.end_date)}</span>
+#: src/components/RecurringTaskManager.tsx:180
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/RecurringTaskManager.tsx:148
+msgid "+ New"
+msgstr "+ New"
+
 #: src/App.tsx:317
 msgid "+ New Task"
 msgstr "+ New Task"
@@ -21,14 +30,306 @@ msgstr "+ New Task"
 msgid "<0>create first task</0>"
 msgstr "<0>create first task</0>"
 
+#. placeholder {0}: task.due_date_offset
+#: src/components/RecurringTaskManager.tsx:173
+msgid "<0>Due: +{0} days</0>"
+msgstr "<0>Due: +{0} days</0>"
+
+#. placeholder {0}: formatDate(task.last_run)
+#: src/components/RecurringTaskManager.tsx:185
+msgid "<0>Last run: {0}</0>"
+msgstr "<0>Last run: {0}</0>"
+
 #: src/App.tsx:348
 msgid "<0>no tasks found</0>"
 msgstr "<0>no tasks found</0>"
+
+#: src/components/RecurringTaskManager.tsx:146
+msgid "<0>Recurring Tasks</0>"
+msgstr "<0>Recurring Tasks</0>"
+
+#. placeholder {0}: formatDate(task.start_date)
+#: src/components/RecurringTaskManager.tsx:177
+msgid "<0>Start: {0}</0>"
+msgstr "<0>Start: {0}</0>"
+
+#: src/components/ZenDialog.tsx:17
+msgid "Accomplished. Roll your neck gently."
+msgstr "Accomplished. Roll your neck gently."
+
+#: src/components/LabelManager.tsx:100
+msgid "Add"
+msgstr "Add"
+
+#: src/components/FilterBar.tsx:57
+#: src/components/FilterBar.tsx:72
+msgid "All"
+msgstr "All"
+
+#: src/components/FilterBar.tsx:39
+msgid "Ascending"
+msgstr "Ascending"
+
+#: src/components/LabelManager.tsx:133
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/ZenDialog.tsx:39
+msgid "Check your posture. Sit up straight."
+msgstr "Check your posture. Sit up straight."
+
+#: src/components/LabelManager.tsx:174
+#: src/components/RecurringTaskManager.tsx:226
+msgid "Close"
+msgstr "Close"
+
+#: src/components/ZenDialog.tsx:19
+msgid "Complete. Stand up and stretch."
+msgstr "Complete. Stand up and stretch."
+
+#: src/components/FilterBar.tsx:74
+msgid "Completed"
+msgstr "Completed"
+
+#: src/components/ZenDialog.tsx:25
+msgid "Completed. Give yourself a moment of stillness."
+msgstr "Completed. Give yourself a moment of stillness."
+
+#: src/components/ZenDialog.tsx:60
+msgid "Continue"
+msgstr "Continue"
+
+#: src/components/FilterBar.tsx:33
+msgid "created"
+msgstr "created"
+
+#. placeholder {0}: task.interval_value
+#: src/components/RecurringTaskManager.tsx:128
+msgid "Day {0} of each month"
+msgstr "Day {0} of each month"
+
+#: src/components/RecurringTaskManager.tsx:214
+msgid "Delete"
+msgstr "Delete"
+
+#. placeholder {0}: label.name
+#: src/components/LabelManager.tsx:51
+msgid "Delete label \"{0}\"?"
+msgstr "Delete label \"{0}\"?"
+
+#. placeholder {0}: label.name
+#. placeholder {1}: tasks.length
+#: src/components/LabelManager.tsx:57
+msgid ""
+"Delete label \"{0}\"?\n"
+"\n"
+"This label is assigned to {1} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
+msgstr ""
+"Delete label \"{0}\"?\n"
+"\n"
+"This label is assigned to {1} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
+
+#: src/components/RecurringTaskManager.tsx:115
+msgid "Delete this recurring task?"
+msgstr "Delete this recurring task?"
 
 #: src/App.tsx:252
 msgid "Delete this task?"
 msgstr "Delete this task?"
 
+#: src/components/FilterBar.tsx:39
+msgid "Descending"
+msgstr "Descending"
+
+#: src/components/ZenDialog.tsx:16
+msgid "Done. Look out the window for a moment."
+msgstr "Done. Look out the window for a moment."
+
+#: src/components/ZenDialog.tsx:24
+msgid "Done. Notice how you're sitting right now."
+msgstr "Done. Notice how you're sitting right now."
+
+#: src/components/FilterBar.tsx:34
+msgid "due"
+msgstr "due"
+
+#: src/components/RecurringTaskManager.tsx:207
+msgid "Edit"
+msgstr "Edit"
+
+#. placeholder {0}: task.interval_value
+#. placeholder {1}: intervalLabels[task.interval_unit]
+#: src/components/RecurringTaskManager.tsx:130
+msgid "Every {0} {1}"
+msgstr "Every {0} {1}"
+
+#: src/components/ZenDialog.tsx:18
+msgid "Finished. Close your eyes for 10 seconds."
+msgstr "Finished. Close your eyes for 10 seconds."
+
+#: src/components/ZenDialog.tsx:43
+msgid "Give your mind a moment of rest."
+msgstr "Give your mind a moment of rest."
+
+#: src/components/ZenDialog.tsx:20
+msgid "Good job. Take three slow breaths."
+msgstr "Good job. Take three slow breaths."
+
+#: src/components/ZenDialog.tsx:13
+msgid "Great work. How about a short walk?"
+msgstr "Great work. How about a short walk?"
+
+#: src/components/ZenDialog.tsx:23
+msgid "Great. How about a cup of tea?"
+msgstr "Great. How about a cup of tea?"
+
+#: src/components/FilterBar.tsx:58
+#: src/components/RecurringTaskManager.tsx:22
+msgid "High"
+msgstr "High"
+
+#: src/components/ZenDialog.tsx:32
+msgid "How about a quick walk?"
+msgstr "How about a quick walk?"
+
+#: src/components/ZenDialog.tsx:42
+msgid "How about some fresh air?"
+msgstr "How about some fresh air?"
+
+#: src/components/ZenDialog.tsx:38
+msgid "Look away from the screen for 20 seconds."
+msgstr "Look away from the screen for 20 seconds."
+
+#: src/components/FilterBar.tsx:60
+#: src/components/RecurringTaskManager.tsx:22
+msgid "Low"
+msgstr "Low"
+
+#: src/components/LabelManager.tsx:77
+msgid "Manage labels"
+msgstr "Manage labels"
+
+#: src/components/FilterBar.tsx:59
+#: src/components/RecurringTaskManager.tsx:22
+msgid "Medium"
+msgstr "Medium"
+
+#: src/components/LabelManager.tsx:84
+msgid "New label..."
+msgstr "New label..."
+
+#: src/components/ZenDialog.tsx:26
+msgid "Nice work. Let your shoulders drop."
+msgstr "Nice work. Let your shoulders drop."
+
+#: src/components/ZenDialog.tsx:15
+msgid "Nice! Time for a sip of water."
+msgstr "Nice! Time for a sip of water."
+
+#: src/components/LabelManager.tsx:168
+msgid "No labels created yet"
+msgstr "No labels created yet"
+
+#: src/components/RecurringTaskManager.tsx:154
+msgid "No recurring tasks configured"
+msgstr "No recurring tasks configured"
+
+#: src/components/RecurringTaskManager.tsx:22
+msgid "None"
+msgstr "None"
+
+#: src/components/ZenDialog.tsx:44
+msgid "Notice your breathing. Slow it down."
+msgstr "Notice your breathing. Slow it down."
+
+#: src/components/FilterBar.tsx:73
+msgid "Open"
+msgstr "Open"
+
+#: src/components/RecurringTaskManager.tsx:196
+msgid "Pause"
+msgstr "Pause"
+
+#: src/components/ZenDialog.tsx:31
+msgid "Pause for a moment. Take three deep breaths."
+msgstr "Pause for a moment. Take three deep breaths."
+
+#: src/components/FilterBar.tsx:32
+msgid "priority"
+msgstr "priority"
+
+#: src/components/FilterBar.tsx:50
+msgid "Priority:"
+msgstr "Priority:"
+
+#: src/components/ZenDialog.tsx:41
+msgid "Relax your face muscles. Unclench your jaw."
+msgstr "Relax your face muscles. Unclench your jaw."
+
+#: src/components/ZenDialog.tsx:33
+msgid "Rest your eyes. Look at something far away."
+msgstr "Rest your eyes. Look at something far away."
+
+#: src/components/RecurringTaskManager.tsx:196
+msgid "Resume"
+msgstr "Resume"
+
+#: src/components/ZenDialog.tsx:34
+msgid "Roll your shoulders and relax your jaw."
+msgstr "Roll your shoulders and relax your jaw."
+
+#: src/components/LabelManager.tsx:136
+msgid "Save"
+msgstr "Save"
+
 #: src/App.tsx:311
 msgid "Search tasks..."
 msgstr "Search tasks..."
+
+#: src/components/FilterBar.tsx:30
+msgid "sort by:"
+msgstr "sort by:"
+
+#: src/components/FilterBar.tsx:65
+msgid "Status:"
+msgstr "Status:"
+
+#: src/components/ZenDialog.tsx:37
+msgid "Stretch your hands and wrists."
+msgstr "Stretch your hands and wrists."
+
+#: src/components/ZenDialog.tsx:21
+msgid "Success. Rest your eyes from the screen."
+msgstr "Success. Rest your eyes from the screen."
+
+#: src/components/ZenDialog.tsx:36
+msgid "Take a mindful minute. How are you feeling?"
+msgstr "Take a mindful minute. How are you feeling?"
+
+#: src/components/ZenDialog.tsx:14
+msgid "Task complete. Stretch your shoulders."
+msgstr "Task complete. Stretch your shoulders."
+
+#: src/components/ZenDialog.tsx:40
+msgid "Time for a micro-break. Breathe slowly."
+msgstr "Time for a micro-break. Breathe slowly."
+
+#: src/components/ZenDialog.tsx:30
+msgid "Time for a short break. Stand up and stretch."
+msgstr "Time for a short break. Stand up and stretch."
+
+#: src/components/ZenDialog.tsx:35
+msgid "Time to hydrate. Get a glass of water."
+msgstr "Time to hydrate. Get a glass of water."
+
+#: src/components/ZenDialog.tsx:12
+msgid "Well done. Take a deep breath."
+msgstr "Well done. Take a deep breath."
+
+#: src/components/ZenDialog.tsx:22
+msgid "Well done. Wiggle your fingers and toes."
+msgstr "Well done. Wiggle your fingers and toes."
+
+#: src/components/ZenDialog.tsx:56
+msgid "Zen Monk"
+msgstr "Zen Monk"

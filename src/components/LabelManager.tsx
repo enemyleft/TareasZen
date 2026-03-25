@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { Label } from "../types";
@@ -15,6 +16,7 @@ const defaultColors = [
 ];
 
 export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) {
+  const { t } = useLingui();
   const [newLabelName, setNewLabelName] = useState("");
   const [newLabelColor, setNewLabelColor] = useState(defaultColors[0]);
   const [editingLabel, setEditingLabel] = useState<Label | null>(null);
@@ -46,12 +48,13 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
   };
 
   const handleDelete = async (label: Label) => {
-    let message = `Delete label "${label.name}"?`;
+    let message = t`Delete label "${label.name}"?`;
     
     try {
       const tasks = await api.getTasksByLabel(label.id);
       if (tasks.length > 0) {
-        message = `Delete label "${label.name}"?\n\nThis label is assigned to ${tasks.length} task${tasks.length > 1 ? 's' : ''}. The tasks will not be deleted, only the label assignment.`;
+        // Note for mantainers: This mesage is on ICU message format standard. Check for a quick reference https://crowdin.com/blog/icu-guide
+        message = t`Delete label "${label.name}"?\n\nThis label is assigned to ${tasks.length} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment.`;
       }
     } catch (error) {
       console.error("Failed to get tasks for label:", error);
@@ -71,14 +74,14 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
   return (
     <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
-        <h2>Manage labels</h2>
+        <h2><Trans>Manage labels</Trans></h2>
 
         <form className="new-label-form" onSubmit={handleCreateLabel}>
           <input
             type="text"
             value={newLabelName}
             onChange={(e) => setNewLabelName(e.target.value)}
-            placeholder="new label..."
+            placeholder={t`New label...`}
           />
           <div className="color-picker">
             {defaultColors.map((color) => (
@@ -94,7 +97,7 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
             ))}
           </div>
           <button type="submit" className="btn-primary">
-            Add
+            <Trans>Add</Trans>
           </button>
         </form>
 
@@ -127,10 +130,10 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
                   </div>
                   <div className="label-edit-actions">
                     <button className="btn-secondary" onClick={() => setEditingLabel(null)}>
-                      Cancel
+                      <Trans>Cancel</Trans>
                     </button>
                     <button className="btn-primary" onClick={handleUpdateLabel}>
-                      Save
+                      <Trans>Save</Trans>
                     </button>
                   </div>
                 </div>
@@ -162,13 +165,13 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
           ))}
 
           {labels.length === 0 && (
-            <p className="empty-state">No labels created yet</p>
+            <p className="empty-state"><Trans>No labels created yet</Trans></p>
           )}
         </div>
 
         <div className="form-actions">
           <button className="btn-secondary" onClick={onClose}>
-            Close
+            <Trans>Close</Trans>
           </button>
         </div>
       </div>
