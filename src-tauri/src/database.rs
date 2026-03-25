@@ -236,6 +236,7 @@ impl Database {
             "due_date" => "t.due_date",
             "created_at" => "t.created_at",
             "completed_at" => "t.completed_at",
+            "reminder_date" => "t.reminder_date",
             _ => "t.created_at",
         };
         let order_dir = if sort_order == "asc" { "ASC" } else { "DESC" };
@@ -250,6 +251,11 @@ impl Database {
             sql.push_str(&format!(
                 " ORDER BY {} {}, t.due_date IS NULL, t.due_date ASC",
                 order_column, order_dir
+            ));
+        } else if sort_by == "reminder_date" {
+            sql.push_str(&format!(
+                " ORDER BY {} IS NULL, {} {}, t.priority DESC",
+                order_column, order_column, order_dir
             ));
         } else if sort_by == "completed_at" {
             sql.push_str(&format!(
