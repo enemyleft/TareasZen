@@ -1,4 +1,5 @@
 import { ClipboardClock, TriangleAlert, Bell } from "lucide-react";
+import { Trans } from "@lingui/react/macro";
 import { TaskWithLabels } from "../types";
 
 interface StartupNotificationProps {
@@ -19,13 +20,16 @@ export function StartupNotification({
   return (
     <div className="modal-overlay">
       <div className="modal notification-modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="notification-section-header"><ClipboardClock size={16}/> Reminders</h2>
-
+        <Trans>
+          <h2 className="notification-section-header"><ClipboardClock size={16}/>&nbsp;Reminders</h2>
+        </Trans>
         {overdueTasks.length > 0 && (
           <div className="notification-section">
-            <h3 className="notification-section-title overdue">
-              <TriangleAlert size={16} /> Due / Overdue ({overdueTasks.length})
-            </h3>
+            <Trans>
+              <h3 className="notification-section-title overdue">
+                <TriangleAlert size={16} />&nbsp;Due / Overdue ({overdueTasks.length})
+              </h3>
+            </Trans>
             <ul className="notification-list">
               {overdueTasks.map((t) => (
                 <li key={t.task.id} className="notification-item overdue">
@@ -43,9 +47,11 @@ export function StartupNotification({
                       ))}
                     </div>
                   </div>
-                  <span className="notification-date">
-                    Due: {new Date(t.task.due_date!).toLocaleDateString()}
-                  </span>
+                  <Trans>
+                    <span className="notification-date">
+                      Due: {new Date(t.task.due_date!).toLocaleDateString()}
+                    </span>
+                  </Trans>
                 </li>
               ))}
             </ul>
@@ -54,9 +60,11 @@ export function StartupNotification({
 
         {reminderTasks.length > 0 && (
           <div className="notification-section">
-            <h3 className="notification-section-title reminder">
-              <Bell size={16} /> Reminders ({reminderTasks.length})
-            </h3>
+            <Trans>
+              <h3 className="notification-section-title reminder">
+                <Bell size={16} />&nbsp;Reminders ({reminderTasks.length})
+              </h3>
+            </Trans>
             <ul className="notification-list">
               {reminderTasks.map((t) => (
                 <li key={t.task.id} className="notification-item reminder">
@@ -84,9 +92,11 @@ export function StartupNotification({
         )}
 
         <div className="form-actions">
-          <button className="btn-primary" onClick={onClose}>
-            Understood
-          </button>
+          <Trans>
+            <button className="btn-primary" onClick={onClose}>
+              Understood
+            </button>
+          </Trans>
         </div>
       </div>
     </div>

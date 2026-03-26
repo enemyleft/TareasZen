@@ -26,32 +26,196 @@ msgstr "+ New"
 msgid "+ New Task"
 msgstr "+ New Task"
 
+#: src/components/Settings.tsx:123
+msgid "<0>  Show mindfulness reminder after completing a task</0>"
+msgstr "<0>  Show mindfulness reminder after completing a task</0>"
+
+#: src/components/Settings.tsx:135
+msgid "<0>  Show periodic mindfulness reminder</0>"
+msgstr "<0>  Show periodic mindfulness reminder</0>"
+
+#: src/components/Settings.tsx:162
+msgid "<0><1/>  Enable automatic backup</0>"
+msgstr "<0><1/>  Enable automatic backup</0>"
+
+#. placeholder {0}: formatDateTime(task.completed_at)
+#: src/components/TaskView.tsx:53
+msgid "<0><1/> Completed on {0}</0>"
+msgstr "<0><1/> Completed on {0}</0>"
+
+#: src/components/TaskView.tsx:106
+msgid "<0><1/> Created</0>"
+msgstr "<0><1/> Created</0>"
+
+#. placeholder {0}: overdueTasks.length
+#: src/components/StartupNotifications.tsx:28
+msgid "<0><1/> Due / Overdue ({0})</0>"
+msgstr "<0><1/> Due / Overdue ({0})</0>"
+
+#: src/components/TaskView.tsx:94
+msgid "<0><1/> Due</0>"
+msgstr "<0><1/> Due</0>"
+
+#: src/components/TaskView.tsx:100
+msgid "<0><1/> Reminder</0>"
+msgstr "<0><1/> Reminder</0>"
+
+#. placeholder {0}: reminderTasks.length
+#: src/components/StartupNotifications.tsx:63
+msgid "<0><1/> Reminders ({0})</0>"
+msgstr "<0><1/> Reminders ({0})</0>"
+
+#: src/components/StartupNotifications.tsx:23
+msgid "<0><1/> Reminders</0>"
+msgstr "<0><1/> Reminders</0>"
+
+#: src/components/Settings.tsx:157
+msgid "<0>Automatic Backup</0>"
+msgstr "<0>Automatic Backup</0>"
+
+#: src/components/Settings.tsx:175
+msgid "<0>Backup folder</0>"
+msgstr "<0>Backup folder</0>"
+
+#: src/components/Settings.tsx:191
+msgid "<0>Backup interval</0>"
+msgstr "<0>Backup interval</0>"
+
+#: src/components/Settings.tsx:216
+msgid "<0>Backup Now</0>"
+msgstr "<0>Backup Now</0>"
+
+#: src/components/Settings.tsx:229
+#: src/components/TaskForm.tsx:171
+msgid "<0>Cancel</0>"
+msgstr "<0>Cancel</0>"
+
+#: src/components/TaskView.tsx:115
+msgid "<0>Close</0>"
+msgstr "<0>Close</0>"
+
+#: src/components/Settings.tsx:100
+msgid "<0>Configure tasks that are automatically created at regular intervals.</0>"
+msgstr "<0>Configure tasks that are automatically created at regular intervals.</0>"
+
 #: src/App.tsx:349
 msgid "<0>create first task</0>"
 msgstr "<0>create first task</0>"
+
+#: src/components/Settings.tsx:210
+msgid "<0>Database location: {dbPath}</0>"
+msgstr "<0>Database location: {dbPath}</0>"
+
+#: src/components/TaskView.tsx:89
+msgid "<0>Dates</0>"
+msgstr "<0>Dates</0>"
+
+#: src/components/RecurringTaskForm.tsx:81
+#: src/components/TaskForm.tsx:86
+#: src/components/TaskView.tsx:81
+msgid "<0>Description</0>"
+msgstr "<0>Description</0>"
+
+#: src/components/RecurringTaskForm.tsx:110
+msgid "<0>Due after (days)</0>"
+msgstr "<0>Due after (days)</0>"
+
+#: src/components/TaskForm.tsx:115
+msgid "<0>Due date</0>"
+msgstr "<0>Due date</0>"
+
+#. placeholder {0}: new Date(t.task.due_date!).toLocaleDateString()
+#: src/components/StartupNotifications.tsx:50
+msgid "<0>Due: {0}</0>"
+msgstr "<0>Due: {0}</0>"
 
 #. placeholder {0}: task.due_date_offset
 #: src/components/RecurringTaskManager.tsx:173
 msgid "<0>Due: +{0} days</0>"
 msgstr "<0>Due: +{0} days</0>"
 
+#: src/components/TaskView.tsx:120
+msgid "<0>Edit</0>"
+msgstr "<0>Edit</0>"
+
+#: src/components/Sidebar.tsx:161
+#: src/components/TaskForm.tsx:140
+#: src/components/TaskView.tsx:62
+msgid "<0>Labels</0>"
+msgstr "<0>Labels</0>"
+
+#. placeholder {0}: formatDate(lastBackup)
+#: src/components/Settings.tsx:207
+msgid "<0>Last backup: {0}</0>"
+msgstr "<0>Last backup: {0}</0>"
+
 #. placeholder {0}: formatDate(task.last_run)
 #: src/components/RecurringTaskManager.tsx:185
 msgid "<0>Last run: {0}</0>"
 msgstr "<0>Last run: {0}</0>"
 
+#: src/components/Settings.tsx:185
+msgid "<0>Leave empty for default: {defaultPath}</0>"
+msgstr "<0>Leave empty for default: {defaultPath}</0>"
+
+#: src/components/Settings.tsx:105
+msgid "<0>Manage Recurring Tasks</0>"
+msgstr "<0>Manage Recurring Tasks</0>"
+
+#: src/components/TaskForm.tsx:163
+msgid "<0>No labels available</0>"
+msgstr "<0>No labels available</0>"
+
 #: src/App.tsx:348
 msgid "<0>no tasks found</0>"
 msgstr "<0>no tasks found</0>"
+
+#: src/components/RecurringTaskForm.tsx:95
+#: src/components/TaskForm.tsx:100
+msgid "<0>Priority</0>"
+msgstr "<0>Priority</0>"
 
 #: src/components/RecurringTaskManager.tsx:146
 msgid "<0>Recurring Tasks</0>"
 msgstr "<0>Recurring Tasks</0>"
 
+#: src/components/Settings.tsx:142
+msgid "<0>Reminder interval (minutes)</0>"
+msgstr "<0>Reminder interval (minutes)</0>"
+
+#: src/components/TaskForm.tsx:127
+msgid "<0>Reminder</0>"
+msgstr "<0>Reminder</0>"
+
+#: src/components/RecurringTaskForm.tsx:125
+msgid "<0>Repeat every</0>"
+msgstr "<0>Repeat every</0>"
+
 #. placeholder {0}: formatDate(task.start_date)
 #: src/components/RecurringTaskManager.tsx:177
 msgid "<0>Start: {0}</0>"
 msgstr "<0>Start: {0}</0>"
+
+#: src/components/Sidebar.tsx:124
+msgid "<0>TareasZen</0>"
+msgstr "<0>TareasZen</0>"
+
+#: src/components/RecurringTaskForm.tsx:66
+#: src/components/TaskForm.tsx:71
+msgid "<0>Title *</0>"
+msgstr "<0>Title *</0>"
+
+#: src/components/StartupNotifications.tsx:95
+msgid "<0>Understood</0>"
+msgstr "<0>Understood</0>"
+
+#: src/components/Sidebar.tsx:143
+msgid "<0>Views</0>"
+msgstr "<0>Views</0>"
+
+#: src/components/Settings.tsx:113
+msgid "<0>Zen Mode</0>"
+msgstr "<0>Zen Mode</0>"
 
 #: src/components/ZenDialog.tsx:17
 msgid "Accomplished. Roll your neck gently."
@@ -66,11 +230,24 @@ msgstr "Add"
 msgid "All"
 msgstr "All"
 
+#: src/components/Sidebar.tsx:153
+msgid "All Tasks"
+msgstr "All Tasks"
+
 #: src/components/FilterBar.tsx:41
 msgid "Ascending"
 msgstr "Ascending"
 
+#: src/components/Settings.tsx:77
+msgid "Backup created: {backupFile}"
+msgstr "Backup created: {backupFile}"
+
+#: src/components/Settings.tsx:81
+msgid "Backup failed: {error}"
+msgstr "Backup failed: {error}"
+
 #: src/components/LabelManager.tsx:133
+#: src/components/RecurringTaskForm.tsx:192
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -103,16 +280,38 @@ msgstr "Completed. Give yourself a moment of stillness."
 msgid "Continue"
 msgstr "Continue"
 
+#: src/components/RecurringTaskForm.tsx:197
+#: src/components/TaskForm.tsx:177
+msgid "Create"
+msgstr "Create"
+
 #: src/components/FilterBar.tsx:33
 msgid "created"
 msgstr "created"
+
+#: src/components/Settings.tsx:73
+msgid "Creating backup..."
+msgstr "Creating backup..."
+
+#: src/components/Settings.tsx:199
+msgid "Daily"
+msgstr "Daily"
 
 #. placeholder {0}: task.interval_value
 #: src/components/RecurringTaskManager.tsx:128
 msgid "Day {0} of each month"
 msgstr "Day {0} of each month"
 
+#: src/components/RecurringTaskForm.tsx:162
+msgid "Day of month"
+msgstr "Day of month"
+
+#: src/components/RecurringTaskForm.tsx:159
+msgid "Days"
+msgstr "Days"
+
 #: src/components/RecurringTaskManager.tsx:214
+#: src/components/TaskCard.tsx:75
 msgid "Delete"
 msgstr "Delete"
 
@@ -145,6 +344,10 @@ msgstr "Delete this task?"
 msgid "Descending"
 msgstr "Descending"
 
+#: src/components/TaskForm.tsx:93
+msgid "Description"
+msgstr "Description"
+
 #: src/components/ZenDialog.tsx:16
 msgid "Done. Look out the window for a moment."
 msgstr "Done. Look out the window for a moment."
@@ -158,14 +361,35 @@ msgid "due"
 msgstr "due"
 
 #: src/components/RecurringTaskManager.tsx:207
+#: src/components/TaskCard.tsx:72
 msgid "Edit"
 msgstr "Edit"
+
+#: src/components/RecurringTaskForm.tsx:62
+msgid "Edit Recurring Task"
+msgstr "Edit Recurring Task"
+
+#: src/components/TaskForm.tsx:67
+msgid "Edit task"
+msgstr "Edit task"
+
+#: src/components/RecurringTaskForm.tsx:180
+msgid "End date"
+msgstr "End date"
+
+#: src/components/Settings.tsx:67
+msgid "Error saving settings"
+msgstr "Error saving settings"
 
 #. placeholder {0}: task.interval_value
 #. placeholder {1}: intervalLabels[task.interval_unit]
 #: src/components/RecurringTaskManager.tsx:130
 msgid "Every {0} {1}"
 msgstr "Every {0} {1}"
+
+#: src/components/Settings.tsx:201
+msgid "Every 2 weeks"
+msgstr "Every 2 weeks"
 
 #: src/components/ZenDialog.tsx:18
 msgid "Finished. Close your eyes for 10 seconds."
@@ -188,7 +412,11 @@ msgid "Great. How about a cup of tea?"
 msgstr "Great. How about a cup of tea?"
 
 #: src/components/FilterBar.tsx:60
+#: src/components/RecurringTaskForm.tsx:105
 #: src/components/RecurringTaskManager.tsx:22
+#: src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:110
+#: src/components/TaskView.tsx:14
 msgid "High"
 msgstr "High"
 
@@ -205,22 +433,51 @@ msgid "Look away from the screen for 20 seconds."
 msgstr "Look away from the screen for 20 seconds."
 
 #: src/components/FilterBar.tsx:62
+#: src/components/RecurringTaskForm.tsx:103
 #: src/components/RecurringTaskManager.tsx:22
+#: src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:108
+#: src/components/TaskView.tsx:14
 msgid "Low"
 msgstr "Low"
 
 #: src/components/LabelManager.tsx:77
+#: src/components/Sidebar.tsx:164
 msgid "Manage labels"
 msgstr "Manage labels"
 
 #: src/components/FilterBar.tsx:61
+#: src/components/RecurringTaskForm.tsx:104
 #: src/components/RecurringTaskManager.tsx:22
+#: src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:109
+#: src/components/TaskView.tsx:14
 msgid "Medium"
 msgstr "Medium"
+
+#: src/components/Settings.tsx:202
+msgid "Monthly"
+msgstr "Monthly"
+
+#: src/components/RecurringTaskForm.tsx:161
+msgid "Months"
+msgstr "Months"
+
+#: src/components/Settings.tsx:86
+msgid "Never"
+msgstr "Never"
 
 #: src/components/LabelManager.tsx:84
 msgid "New label..."
 msgstr "New label..."
+
+#: src/components/RecurringTaskForm.tsx:62
+msgid "New Recurring Task"
+msgstr "New Recurring Task"
+
+#: src/components/TaskForm.tsx:67
+msgid "New task"
+msgstr "New task"
 
 #: src/components/ZenDialog.tsx:26
 msgid "Nice work. Let your shoulders drop."
@@ -229,6 +486,10 @@ msgstr "Nice work. Let your shoulders drop."
 #: src/components/ZenDialog.tsx:15
 msgid "Nice! Time for a sip of water."
 msgstr "Nice! Time for a sip of water."
+
+#: src/components/Sidebar.tsx:188
+msgid "No labels"
+msgstr "No labels"
 
 #: src/components/LabelManager.tsx:168
 msgid "No labels created yet"
@@ -239,6 +500,8 @@ msgid "No recurring tasks configured"
 msgstr "No recurring tasks configured"
 
 #: src/components/RecurringTaskManager.tsx:22
+#: src/components/TaskCard.tsx:17
+#: src/components/TaskView.tsx:14
 msgid "None"
 msgstr "None"
 
@@ -249,6 +512,14 @@ msgstr "Notice your breathing. Slow it down."
 #: src/components/FilterBar.tsx:75
 msgid "Open"
 msgstr "Open"
+
+#: src/components/RecurringTaskForm.tsx:119
+msgid "Optional"
+msgstr "Optional"
+
+#: src/components/RecurringTaskForm.tsx:88
+msgid "Optional description..."
+msgstr "Optional description..."
 
 #: src/components/RecurringTaskManager.tsx:196
 msgid "Pause"
@@ -265,6 +536,10 @@ msgstr "priority"
 #: src/components/FilterBar.tsx:52
 msgid "Priority:"
 msgstr "Priority:"
+
+#: src/components/Settings.tsx:99
+msgid "Recurring Tasks"
+msgstr "Recurring Tasks"
 
 #: src/components/ZenDialog.tsx:41
 msgid "Relax your face muscles. Unclench your jaw."
@@ -287,16 +562,36 @@ msgid "Roll your shoulders and relax your jaw."
 msgstr "Roll your shoulders and relax your jaw."
 
 #: src/components/LabelManager.tsx:136
+#: src/components/RecurringTaskForm.tsx:197
+#: src/components/Settings.tsx:235
+#: src/components/TaskForm.tsx:177
 msgid "Save"
 msgstr "Save"
+
+#: src/components/Settings.tsx:235
+msgid "Saving..."
+msgstr "Saving..."
 
 #: src/App.tsx:311
 msgid "Search tasks..."
 msgstr "Search tasks..."
 
+#: src/components/Settings.tsx:96
+#: src/components/Sidebar.tsx:136
+msgid "Settings"
+msgstr "Settings"
+
+#: src/components/Settings.tsx:63
+msgid "Settings saved"
+msgstr "Settings saved"
+
 #: src/components/FilterBar.tsx:30
 msgid "sort by:"
 msgstr "sort by:"
+
+#: src/components/RecurringTaskForm.tsx:169
+msgid "Start date *"
+msgstr "Start date *"
 
 #: src/components/FilterBar.tsx:67
 msgid "Status:"
@@ -318,6 +613,14 @@ msgstr "Take a mindful minute. How are you feeling?"
 msgid "Task complete. Stretch your shoulders."
 msgstr "Task complete. Stretch your shoulders."
 
+#: src/components/TaskForm.tsx:79
+msgid "Task name"
+msgstr "Task name"
+
+#: src/components/RecurringTaskForm.tsx:74
+msgid "Task title..."
+msgstr "Task title..."
+
 #: src/components/ZenDialog.tsx:40
 msgid "Time for a micro-break. Breathe slowly."
 msgstr "Time for a micro-break. Breathe slowly."
@@ -329,6 +632,18 @@ msgstr "Time for a short break. Stand up and stretch."
 #: src/components/ZenDialog.tsx:35
 msgid "Time to hydrate. Get a glass of water."
 msgstr "Time to hydrate. Get a glass of water."
+
+#: src/components/TaskCard.tsx:69
+msgid "View"
+msgstr "View"
+
+#: src/components/Settings.tsx:200
+msgid "Weekly"
+msgstr "Weekly"
+
+#: src/components/RecurringTaskForm.tsx:160
+msgid "Weeks"
+msgstr "Weeks"
 
 #: src/components/ZenDialog.tsx:12
 msgid "Well done. Take a deep breath."

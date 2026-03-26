@@ -1,3 +1,7 @@
+import { useLingui } from "@lingui/react/macro";
+import { Trans as Translation } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
+
 import classnames from "classnames";
 import { Eye, Pencil, Trash, Check, Bell, Calendar, CalendarClock } from "lucide-react";
 import { TaskWithLabels } from "../types";
@@ -10,7 +14,7 @@ interface TaskCardProps {
   onToggleComplete: () => void;
 }
 
-const priorityLabels = ["", "Low", "Medium", "High"];
+const priorityLabels = [msg`None`, msg`Low`, msg`Medium`, msg`High`];
 
 export function TaskCard({
   taskWithLabels,
@@ -19,6 +23,7 @@ export function TaskCard({
   onDelete,
   onToggleComplete,
 }: TaskCardProps) {
+  const { t } = useLingui();
   const { task, labels } = taskWithLabels;
 
   const formatDate = (dateString: string | null) => {
@@ -50,20 +55,24 @@ export function TaskCard({
       {/* Row 1: Checkbox, Title, Priority, Actions */}
       <div className="task-row task-row-main">
         <div className="task-checkbox" onClick={onToggleComplete}>
-          {task.completed ? "✓" : ""}
+          {task.completed ? (
+            <Check size={16} />
+          ) : ""}
         </div>
         <h3 className="task-title">{task.title}</h3>
-        <span className={`priority-badge priority-${task.priority}`}>
-          {priorityLabels[task.priority]}
-        </span>
+        {task.priority > 0 && (
+          <span className={`priority-badge priority-${task.priority}`}>
+            <Translation id={priorityLabels[task.priority]?.id} />
+          </span>
+        )}
         <div className="task-actions">
-          <button className="btn-icon" onClick={onView} title="View">
+          <button className="btn-icon" onClick={onView} title={t`View`}>
             <Eye size={16} />
           </button>
-          <button className="btn-icon" onClick={onEdit} title="Edit">
+          <button className="btn-icon" onClick={onEdit} title={t`Edit`}>
             <Pencil size={16} />
           </button>
-          <button className="btn-icon" onClick={onDelete} title="Delete">
+          <button className="btn-icon" onClick={onDelete} title={t`Delete`}>
             <Trash size={16} />
           </button>
         </div>
