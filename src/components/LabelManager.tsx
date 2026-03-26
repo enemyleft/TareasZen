@@ -52,9 +52,11 @@ export function LabelManager({ labels, onClose, onRefresh }: LabelManagerProps) 
     
     try {
       const tasks = await api.getTasksByLabel(label.id);
-      if (tasks.length > 0) {
+      const length = tasks.length;
+      const labelName = label.name;
+      if (length > 0) {
         // Note for mantainers: This mesage is on ICU message format standard. Check for a quick reference https://crowdin.com/blog/icu-guide
-        message = t`Delete label "${label.name}"?\n\nThis label is assigned to ${tasks.length} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment.`;
+        message = t`Delete label "${labelName}"?\n\nThis label is assigned to ${length} {length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment.`;
       }
     } catch (error) {
       console.error("Failed to get tasks for label:", error);

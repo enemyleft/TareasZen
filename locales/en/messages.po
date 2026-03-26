@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-03-22 19:06-0300\n"
+"POT-Creation-Date: 2026-03-25 22:56-0300\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #. placeholder {0}: task.end_date && <span>End: {formatDate(task.end_date)}</span>
 #: src/components/RecurringTaskManager.tsx:180
@@ -221,7 +215,7 @@ msgstr "<0>Zen Mode</0>"
 msgid "Accomplished. Roll your neck gently."
 msgstr "Accomplished. Roll your neck gently."
 
-#: src/components/LabelManager.tsx:100
+#: src/components/LabelManager.tsx:102
 msgid "Add"
 msgstr "Add"
 
@@ -246,7 +240,7 @@ msgstr "Backup created: {backupFile}"
 msgid "Backup failed: {error}"
 msgstr "Backup failed: {error}"
 
-#: src/components/LabelManager.tsx:133
+#: src/components/LabelManager.tsx:135
 #: src/components/RecurringTaskForm.tsx:192
 msgid "Cancel"
 msgstr "Cancel"
@@ -255,7 +249,7 @@ msgstr "Cancel"
 msgid "Check your posture. Sit up straight."
 msgstr "Check your posture. Sit up straight."
 
-#: src/components/LabelManager.tsx:174
+#: src/components/LabelManager.tsx:176
 #: src/components/RecurringTaskManager.tsx:226
 msgid "Close"
 msgstr "Close"
@@ -320,17 +314,15 @@ msgstr "Delete"
 msgid "Delete label \"{0}\"?"
 msgstr "Delete label \"{0}\"?"
 
-#. placeholder {0}: label.name
-#. placeholder {1}: tasks.length
-#: src/components/LabelManager.tsx:57
+#: src/components/LabelManager.tsx:59
 msgid ""
-"Delete label \"{0}\"?\n"
+"Delete label \"{labelName}\"?\n"
 "\n"
-"This label is assigned to {1} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
+"This label is assigned to {length} {length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
 msgstr ""
-"Delete label \"{0}\"?\n"
+"Delete label \"{labelName}\"?\n"
 "\n"
-"This label is assigned to {1} {tasks.length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
+"This label is assigned to {length} {length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
 
 #: src/components/RecurringTaskManager.tsx:115
 msgid "Delete this recurring task?"
@@ -441,7 +433,7 @@ msgstr "Look away from the screen for 20 seconds."
 msgid "Low"
 msgstr "Low"
 
-#: src/components/LabelManager.tsx:77
+#: src/components/LabelManager.tsx:79
 #: src/components/Sidebar.tsx:164
 msgid "Manage labels"
 msgstr "Manage labels"
@@ -467,7 +459,7 @@ msgstr "Months"
 msgid "Never"
 msgstr "Never"
 
-#: src/components/LabelManager.tsx:84
+#: src/components/LabelManager.tsx:86
 msgid "New label..."
 msgstr "New label..."
 
@@ -491,7 +483,7 @@ msgstr "Nice! Time for a sip of water."
 msgid "No labels"
 msgstr "No labels"
 
-#: src/components/LabelManager.tsx:168
+#: src/components/LabelManager.tsx:170
 msgid "No labels created yet"
 msgstr "No labels created yet"
 
@@ -561,7 +553,7 @@ msgstr "Resume"
 msgid "Roll your shoulders and relax your jaw."
 msgstr "Roll your shoulders and relax your jaw."
 
-#: src/components/LabelManager.tsx:136
+#: src/components/LabelManager.tsx:138
 #: src/components/RecurringTaskForm.tsx:197
 #: src/components/Settings.tsx:235
 #: src/components/TaskForm.tsx:177

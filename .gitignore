@@ -19,6 +19,7 @@ Thumbs.db
 # LinguiJS compiled catalogs
 locale/**/*.js
 locale/**/*.mjs
+locale/**/*.ts
 
 # LinguiJS / Gettext artifacts
 *.mo
