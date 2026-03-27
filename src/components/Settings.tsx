@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import * as api from "../api";
 
 interface SettingsProps {
@@ -7,6 +8,7 @@ interface SettingsProps {
 }
 
 export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
+  const { t } = useLingui();
   const [backupEnabled, setBackupEnabled] = useState(false);
   const [backupPath, setBackupPath] = useState("");
   const [backupInterval, setBackupInterval] = useState("7");
@@ -58,30 +60,30 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
       await api.setSetting("zen_periodic", zenPeriodic.toString());
       await api.setSetting("zen_interval_minutes", zenInterval);
       setBackupPath(pathToSave);
-      setBackupStatus("Settings saved");
+      setBackupStatus(t`Settings saved`);
       setTimeout(() => setBackupStatus(null), 3000);
     } catch (error) {
       console.error("Failed to save settings:", error);
-      setBackupStatus("Error saving settings");
+      setBackupStatus(t`Error saving settings`);
     }
     setSaving(false);
   };
 
   const handleBackupNow = async () => {
-    setBackupStatus("Creating backup...");
+    setBackupStatus(t`Creating backup...`);
     try {
       const pathToUse = backupPath.trim() || defaultPath;
       const backupFile = await api.createBackup(pathToUse, dbPath);
-      setBackupStatus(`Backup created: ${backupFile}`);
+      setBackupStatus(t`Backup created: ${backupFile}`);
       setLastBackup(new Date().toISOString());
     } catch (error) {
       console.error("Backup failed:", error);
-      setBackupStatus(`Backup failed: ${error}`);
+      setBackupStatus(t`Backup failed: ${error}`);
     }
   };
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return "Never";
+    if (!dateString) return t`Never`;
     return new Date(dateString).toLocaleString("en-US", {
       dateStyle: "medium",
       timeStyle: "short",
@@ -91,20 +93,26 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
   return (
     <div className="modal-overlay">
       <div className="modal modal-wide" onClick={(e) => e.stopPropagation()}>
-        <h2>Settings</h2>
+        <h2><Trans>Settings</Trans></h2>
 
         <section className="settings-section">
-          <h3>Recurring Tasks</h3>
-          <p className="settings-description">
-            Configure tasks that are automatically created at regular intervals.
-          </p>
-          <button className="btn-secondary" onClick={onOpenRecurringTasks}>
-            Manage Recurring Tasks
-          </button>
+          <h3><Trans>Recurring Tasks</Trans></h3>
+          <Trans>
+            <p className="settings-description">
+              Configure tasks that are automatically created at regular intervals.
+            </p>
+          </Trans>
+          <Trans>
+            <button className="btn-secondary" onClick={onOpenRecurringTasks}>
+              Manage Recurring Tasks
+            </button>
+          </Trans>
         </section>
 
         <section className="settings-section">
-          <h3>Zen Mode</h3>
+          <Trans>
+            <h3>Zen Mode</h3>
+          </Trans>
           <div className="form-group">
             <label className="settings-checkbox">
               <input
@@ -112,7 +120,9 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
                 checked={zenMode}
                 onChange={(e) => setZenMode(e.target.checked)}
               />
-              <span>&nbsp; Show mindfulness reminder after completing a task</span>
+              <Trans>
+                <span>&nbsp; Show mindfulness reminder after completing a task</span>
+              </Trans>
             </label>
           </div>
           <div className="form-group">
@@ -122,12 +132,16 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
                 checked={zenPeriodic}
                 onChange={(e) => setZenPeriodic(e.target.checked)}
               />
-              <span>&nbsp; Show periodic mindfulness reminder</span>
+              <Trans>
+                <span>&nbsp; Show periodic mindfulness reminder</span>
+              </Trans>
             </label>
           </div>
           {zenPeriodic && (
             <div className="form-group">
-              <label htmlFor="zenInterval">Reminder interval (minutes)</label>
+              <Trans>
+                <label htmlFor="zenInterval">Reminder interval (minutes)</label>
+              </Trans>
               <input
                 id="zenInterval"
                 type="number"
@@ -140,21 +154,27 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
         </section>
 
         <section className="settings-section">
-          <h3>Automatic Backup</h3>
+          <Trans>
+            <h3>Automatic Backup</h3>
+          </Trans>
 
           <div className="form-group">
-            <label className="settings-checkbox">
-              <input
-                type="checkbox"
-                checked={backupEnabled}
-                onChange={(e) => setBackupEnabled(e.target.checked)}
-              />
-              &nbsp; Enable automatic backup
-            </label>
+            <Trans>
+              <label className="settings-checkbox">
+                <input
+                  type="checkbox"
+                  checked={backupEnabled}
+                  onChange={(e) => setBackupEnabled(e.target.checked)}
+                />
+                &nbsp; Enable automatic backup
+              </label>
+            </Trans>
           </div>
 
           <div className="form-group">
-            <label htmlFor="backupPath">Backup folder</label>
+            <Trans>
+              <label htmlFor="backupPath">Backup folder</label>
+            </Trans>
             <input
               id="backupPath"
               type="text"
@@ -162,32 +182,42 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
               onChange={(e) => setBackupPath(e.target.value)}
               placeholder={defaultPath}
             />
-            <span className="form-hint">Leave empty for default: {defaultPath}</span>
+            <Trans>
+              <span className="form-hint">Leave empty for default: {defaultPath}</span>
+            </Trans>
           </div>
 
           <div className="form-group">
-            <label htmlFor="backupInterval">Backup interval</label>
+            <Trans>
+              <label htmlFor="backupInterval">Backup interval</label>
+            </Trans>
             <select
               id="backupInterval"
               value={backupInterval}
               onChange={(e) => setBackupInterval(e.target.value)}
             >
-              <option value="1">Daily</option>
-              <option value="7">Weekly</option>
-              <option value="14">Every 2 weeks</option>
-              <option value="30">Monthly</option>
+              <option value="1">{t`Daily`}</option>
+              <option value="7">{t`Weekly`}</option>
+              <option value="14">{t`Every 2 weeks`}</option>
+              <option value="30">{t`Monthly`}</option>
             </select>
           </div>
 
           <div className="settings-info">
-            <p>Last backup: {formatDate(lastBackup)}</p>
-            <p>Database location: {dbPath}</p>
+            <Trans>
+              <p>Last backup: {formatDate(lastBackup)}</p>
+            </Trans>
+            <Trans>
+              <p>Database location: {dbPath}</p>
+            </Trans>
           </div>
 
           <div className="settings-actions">
-            <button className="btn-secondary" onClick={handleBackupNow}>
-              Backup Now
-            </button>
+            <Trans>
+              <button className="btn-secondary" onClick={handleBackupNow}>
+                Backup Now
+              </button>
+            </Trans>
           </div>
 
           {backupStatus && (
@@ -196,11 +226,13 @@ export function Settings({ onClose, onOpenRecurringTasks }: SettingsProps) {
         </section>
 
         <div className="form-actions">
-          <button className="btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
+          <Trans>
+            <button className="btn-secondary" onClick={onClose}>
+              Cancel
+            </button>
+          </Trans>
           <button className="btn-primary" onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save"}
+            {saving ? t`Saving...` : t`Save`}
           </button>
         </div>
       </div>

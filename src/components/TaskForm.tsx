@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Label, TaskWithLabels } from "../types";
 
 interface TaskFormProps {
@@ -21,6 +22,7 @@ export function TaskForm({
   onSubmit,
   onCancel,
 }: TaskFormProps) {
+  const { t } = useLingui();
   const isEditing = !!taskWithLabels;
   const task = taskWithLabels?.task;
 
@@ -62,49 +64,57 @@ export function TaskForm({
   return (
     <div className="modal-overlay">
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>{isEditing ? "Edit task" : "New task"}</h2>
+        <h2>{isEditing ? t`Edit task` : t`New task`}</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title">Title *</label>
+            <Trans>
+              <label htmlFor="title">Title *</label>
+            </Trans>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="task name"
+              placeholder={t`Task name`}
               autoFocus
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">description</label>
+            <Trans>
+              <label htmlFor="description">Description</label>
+            </Trans>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="description"
+              placeholder={t`Description`}
               rows={3}
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="priority">priority</label>
+              <Trans>
+                <label htmlFor="priority">Priority</label>
+              </Trans>
               <select
                 id="priority"
                 value={priority}
                 onChange={(e) => setPriority(Number(e.target.value))}
               >
-                <option value={1}>low</option>
-                <option value={2}>medium</option>
-                <option value={3}>high</option>
+                <option value={1}>{t`Low`}</option>
+                <option value={2}>{t`Medium`}</option>
+                <option value={3}>{t`High`}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="dueDate">due date</label>
+              <Trans>
+                <label htmlFor="dueDate">Due date</label>
+              </Trans>
               <input
                 id="dueDate"
                 type="date"
@@ -114,7 +124,9 @@ export function TaskForm({
             </div>
 
             <div className="form-group">
-              <label htmlFor="reminderDate">reminder</label>
+              <Trans>
+                <label htmlFor="reminderDate">Reminder</label>
+              </Trans>
               <input
                 id="reminderDate"
                 type="date"
@@ -125,7 +137,9 @@ export function TaskForm({
           </div>
 
           <div className="form-group">
-            <label>Labels</label>
+            <Trans>
+              <label>Labels</label>
+            </Trans>
             <div className="label-selector">
               {labels.map((label) => (
                 <button
@@ -146,17 +160,21 @@ export function TaskForm({
                 </button>
               ))}
               {labels.length === 0 && (
-                <span className="no-labels">no lables available</span>
+                <Trans>
+                  <span className="no-labels">No labels available</span>
+                </Trans>
               )}
             </div>
           </div>
 
           <div className="form-actions">
-            <button type="button" className="btn-secondary" onClick={onCancel}>
-              cancel
-            </button>
+            <Trans>
+              <button type="button" className="btn-secondary" onClick={onCancel}>
+                Cancel
+              </button>
+            </Trans>
             <button type="submit" className="btn-primary">
-              {isEditing ? "save" : "create"}
+              {isEditing ? t`Save` : t`Create`}
             </button>
           </div>
         </form>

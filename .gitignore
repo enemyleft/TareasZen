@@ -15,3 +15,11 @@ Thumbs.db
 
 # Logs
 *.log
+
+# LinguiJS compiled catalogs
+locale/**/*.js
+locale/**/*.mjs
+locale/**/*.ts
+
+# LinguiJS / Gettext artifacts
+*.mo

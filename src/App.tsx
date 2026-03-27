@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { TaskWithLabels, Label, SortBy, SortOrder, TaskFilter } from "./types";
 import * as api from "./api";
 import { TaskCard } from "./components/TaskCard";
@@ -13,6 +14,7 @@ import { ZenDialog } from "./components/ZenDialog";
 import { RecurringTaskManager } from "./components/RecurringTaskManager";
 
 function App() {
+  const { t } = useLingui();
   const [tasks, setTasks] = useState<TaskWithLabels[]>([]);
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelId, setSelectedLabelId] = useState<string | null>(null);
@@ -247,7 +249,7 @@ function App() {
   };
 
   const handleDeleteTask = async (taskId: string) => {
-    const confirmed = await api.confirmDialog("Delete this task?");
+    const confirmed = await api.confirmDialog(t`Delete this task?`);
     if (!confirmed) {
       return;
     }
@@ -306,13 +308,13 @@ function App() {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search tasks..."
+                placeholder={t`Search tasks...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <button className="btn-primary" onClick={() => setShowTaskForm(true)}>
-              + New Task
+              <Trans>+ New Task</Trans>
             </button>
           </div>
         </header>
@@ -343,10 +345,12 @@ function App() {
 
         {filteredTasks.length === 0 && (
           <div className="empty-state">
-            <p>no tasks found</p>
-            <button className="btn-secondary" onClick={() => setShowTaskForm(true)}>
-              create first task
-            </button>
+            <Trans><p>no tasks found</p></Trans>
+            <Trans>
+              <button className="btn-secondary" onClick={() => setShowTaskForm(true)}>
+                create first task
+              </button>
+            </Trans>
           </div>
         )}
       </main>

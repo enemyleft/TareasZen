@@ -1,3 +1,6 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { Trans as Translation } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
 import { Pause, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Pencil, Trash } from "lucide-react";
@@ -16,9 +19,10 @@ const intervalLabels: Record<string, string> = {
   day_of_month: "of each month",
 };
 
-const priorityLabels = ["", "Low", "Medium", "High"];
+const priorityLabels = [msg`None`, msg`Low`, msg`Medium`, msg`High`];
 
 export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
+  const { t } = useLingui();
   const [recurringTasks, setRecurringTasks] = useState<RecurringTask[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<RecurringTask | null>(null);
@@ -108,7 +112,7 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
   };
 
   const handleDelete = async (id: string) => {
-    const confirmed = await api.confirmDialog("Delete this recurring task?");
+    const confirmed = await api.confirmDialog(t`Delete this recurring task?`);
     if (!confirmed) return;
 
     try {
@@ -121,9 +125,9 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
 
   const formatInterval = (task: RecurringTask) => {
     if (task.interval_unit === "day_of_month") {
-      return `Day ${task.interval_value} of each month`;
+      return t`Day ${task.interval_value} of each month`;
     }
-    return `Every ${task.interval_value} ${intervalLabels[task.interval_unit]}`;
+    return t`Every ${task.interval_value} ${intervalLabels[task.interval_unit]}`;
   };
 
   const formatDate = (dateString: string | null) => {
@@ -139,15 +143,15 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
     <div className="modal-overlay">
       <div className="modal modal-large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Recurring Tasks</h2>
+          <Trans><h2>Recurring Tasks</h2></Trans>
           <button className="btn-primary" onClick={() => setShowForm(true)}>
-            + New
+            <Trans>+ New</Trans>
           </button>
         </div>
 
         <div className="recurring-task-list">
           {recurringTasks.length === 0 ? (
-            <p className="empty-state">No recurring tasks configured</p>
+            <p className="empty-state"><Trans>No recurring tasks configured</Trans></p>
           ) : (
             recurringTasks.map((task) => (
               <div
@@ -157,29 +161,39 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
                 <div className="recurring-task-info">
                   <div className="recurring-task-header">
                     <span className="recurring-task-title">{task.title}</span>
-                    <span className={`priority-badge priority-${task.priority}`}>
-                      {priorityLabels[task.priority]}
-                    </span>
+                    {task.priority > 0 && (
+                      <span className={`priority-badge priority-${task.priority}`}>
+                        <Translation id={priorityLabels[task.priority].id} />
+                      </span>
+                    )}
                   </div>
                   <div className="recurring-task-details">
                     <span>{formatInterval(task)}</span>
                     {task.due_date_offset && (
-                      <span>Due: +{task.due_date_offset} days</span>
+                      <Trans>
+                        <span>Due: +{task.due_date_offset} days</span>
+                      </Trans>
                     )}
-                    <span>Start: {formatDate(task.start_date)}</span>
-                    {task.end_date && <span>End: {formatDate(task.end_date)}</span>}
+                    <Trans>
+                      <span>Start: {formatDate(task.start_date)}</span>
+                    </Trans>
+                    <Trans>
+                      {task.end_date && <span>End: {formatDate(task.end_date)}</span>}
+                    </Trans>
                   </div>
                   {task.last_run && (
-                    <div className="recurring-task-lastrun">
-                      Last run: {formatDate(task.last_run)}
-                    </div>
+                    <Trans>
+                      <div className="recurring-task-lastrun">
+                        Last run: {formatDate(task.last_run)}
+                      </div>
+                    </Trans>
                   )}
                 </div>
                 <div className="recurring-task-actions">
                   <button
                     className="btn-icon"
                     onClick={() => handleToggleActive(task)}
-                    title={task.is_active ? "Pause" : "Resume"}
+                    title={task.is_active ? t`Pause` : t`Resume`}
                   >
                     {task.is_active ? (
                       <Pause size={16} />
@@ -190,14 +204,14 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
                   <button
                     className="btn-icon"
                     onClick={() => setEditingTask(task)}
-                    title="Edit"
+                    title={t`Edit`}
                   >
                     <Pencil size={16} />
                   </button>
                   <button
                     className="btn-icon"
                     onClick={() => handleDelete(task.id)}
-                    title="Delete"
+                    title={t`Delete`}
                   >
                     <Trash size={16} />
                   </button>
@@ -209,7 +223,7 @@ export function RecurringTaskManager({ onClose }: RecurringTaskManagerProps) {
 
         <div className="form-actions">
           <button className="btn-secondary" onClick={onClose}>
-            Close
+            <Trans>Close</Trans>
           </button>
         </div>
       </div>

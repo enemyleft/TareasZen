@@ -1,0 +1,630 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2026-03-25 22:56-0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#. placeholder {0}: task.end_date && <span>End: {formatDate(task.end_date)}</span>
+#: src/components/RecurringTaskManager.tsx:180
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/RecurringTaskManager.tsx:148
+msgid "+ New"
+msgstr "Nuevo"
+
+#: src/App.tsx:317
+msgid "+ New Task"
+msgstr "+ Nueva tarea"
+
+#: src/components/Settings.tsx:123
+msgid "<0>  Show mindfulness reminder after completing a task</0>"
+msgstr "<0>Muestra un recordatorio de atención plena después de completar una tarea</0>"
+
+#: src/components/Settings.tsx:135
+msgid "<0>  Show periodic mindfulness reminder</0>"
+msgstr "<0>Recordatorio periódico de atención plena</0>"
+
+#: src/components/Settings.tsx:162
+msgid "<0><1/>  Enable automatic backup</0>"
+msgstr "<0><1/>Habilitar la copia de seguridad automática</0>"
+
+#. placeholder {0}: formatDateTime(task.completed_at)
+#: src/components/TaskView.tsx:53
+msgid "<0><1/> Completed on {0}</0>"
+msgstr "<0><1/> Completado el {0}</0>"
+
+#: src/components/TaskView.tsx:106
+msgid "<0><1/> Created</0>"
+msgstr "<0><1/> Creación</0>"
+
+#. placeholder {0}: overdueTasks.length
+#: src/components/StartupNotifications.tsx:28
+msgid "<0><1/> Due / Overdue ({0})</0>"
+msgstr "<0><1/>Vencimiento / Vencimiento ({0})</0>"
+
+#: src/components/TaskView.tsx:94
+msgid "<0><1/> Due</0>"
+msgstr "<0><1/> Debido</0>"
+
+#: src/components/TaskView.tsx:100
+msgid "<0><1/> Reminder</0>"
+msgstr "<0><1/> Recordatorio</0>"
+
+#. placeholder {0}: reminderTasks.length
+#: src/components/StartupNotifications.tsx:63
+msgid "<0><1/> Reminders ({0})</0>"
+msgstr "<0><1/>Recordatorios ({0})</0>"
+
+#: src/components/StartupNotifications.tsx:23
+msgid "<0><1/> Reminders</0>"
+msgstr "<0><1/>Recordatorios</0>"
+
+#: src/components/Settings.tsx:157
+msgid "<0>Automatic Backup</0>"
+msgstr "<0>Copia de seguridad automática</0>"
+
+#: src/components/Settings.tsx:175
+msgid "<0>Backup folder</0>"
+msgstr "<0>Carpeta de copia de seguridad</0>"
+
+#: src/components/Settings.tsx:191
+msgid "<0>Backup interval</0>"
+msgstr "<0>Intervalo de respaldo</0>"
+
+#: src/components/Settings.tsx:216
+msgid "<0>Backup Now</0>"
+msgstr "<0>Copia de seguridad ahora</0>"
+
+#: src/components/Settings.tsx:229 src/components/TaskForm.tsx:171
+msgid "<0>Cancel</0>"
+msgstr "<0>Cancelar</0>"
+
+#: src/components/TaskView.tsx:115
+msgid "<0>Close</0>"
+msgstr "<0>Cierre</0>"
+
+#: src/components/Settings.tsx:100
+msgid "<0>Configure tasks that are automatically created at regular intervals.</0>"
+msgstr "<0>Configura tareas que se crean automáticamente a intervalos regulares.</0>"
+
+#: src/App.tsx:349
+msgid "<0>create first task</0>"
+msgstr "<0>Crear la primera tarea</0>"
+
+#: src/components/Settings.tsx:210
+msgid "<0>Database location: {dbPath}</0>"
+msgstr "<0>Ubicación de la base de datos: {dbPath}</0>"
+
+#: src/components/TaskView.tsx:89
+msgid "<0>Dates</0>"
+msgstr "<0>Fechas</0>"
+
+#: src/components/RecurringTaskForm.tsx:81 src/components/TaskForm.tsx:86
+#: src/components/TaskView.tsx:81
+msgid "<0>Description</0>"
+msgstr "<0>Descripción</0>"
+
+#: src/components/RecurringTaskForm.tsx:110
+msgid "<0>Due after (days)</0>"
+msgstr "<0>Fecha prevista para después de (días)</0>"
+
+#: src/components/TaskForm.tsx:115
+msgid "<0>Due date</0>"
+msgstr "<0>Fecha prevista de parto</0>"
+
+#. placeholder {0}: new Date(t.task.due_date!).toLocaleDateString()
+#: src/components/StartupNotifications.tsx:50
+msgid "<0>Due: {0}</0>"
+msgstr "<0>Fecha límite: {0}</0>"
+
+#. placeholder {0}: task.due_date_offset
+#: src/components/RecurringTaskManager.tsx:173
+msgid "<0>Due: +{0} days</0>"
+msgstr "<0>Fecha límite: +{0} días</0>"
+
+#: src/components/TaskView.tsx:120
+msgid "<0>Edit</0>"
+msgstr "<0>Edición</0>"
+
+#: src/components/Sidebar.tsx:161 src/components/TaskForm.tsx:140
+#: src/components/TaskView.tsx:62
+msgid "<0>Labels</0>"
+msgstr "<0>Sellos</0>"
+
+#. placeholder {0}: formatDate(lastBackup)
+#: src/components/Settings.tsx:207
+msgid "<0>Last backup: {0}</0>"
+msgstr "<0>Última opción de seguridad: {0}</0>"
+
+#. placeholder {0}: formatDate(task.last_run)
+#: src/components/RecurringTaskManager.tsx:185
+msgid "<0>Last run: {0}</0>"
+msgstr "<0>Última partida: {0}</0>"
+
+#: src/components/Settings.tsx:185
+msgid "<0>Leave empty for default: {defaultPath}</0>"
+msgstr "<0>Deja vacío por defecto: {defaultPath}</0>"
+
+#: src/components/Settings.tsx:105
+msgid "<0>Manage Recurring Tasks</0>"
+msgstr "<0>Gestionar tareas recurrentes</0>"
+
+#: src/components/TaskForm.tsx:163
+msgid "<0>No labels available</0>"
+msgstr "<0>No hay etiquetas disponibles</0>"
+
+#: src/App.tsx:348
+msgid "<0>no tasks found</0>"
+msgstr "<0>No se han encontrado tareas</0>"
+
+#: src/components/RecurringTaskForm.tsx:95 src/components/TaskForm.tsx:100
+msgid "<0>Priority</0>"
+msgstr "<0>Prioridad</0>"
+
+#: src/components/RecurringTaskManager.tsx:146
+msgid "<0>Recurring Tasks</0>"
+msgstr "<0>Tareas recurrentes</0>"
+
+#: src/components/Settings.tsx:142
+msgid "<0>Reminder interval (minutes)</0>"
+msgstr "<0>Intervalo de recordatorio (minutos)</0>"
+
+#: src/components/TaskForm.tsx:127
+msgid "<0>Reminder</0>"
+msgstr "<0>Recordatorio</0>"
+
+#: src/components/RecurringTaskForm.tsx:125
+msgid "<0>Repeat every</0>"
+msgstr "<0>Repite cada</0>"
+
+#. placeholder {0}: formatDate(task.start_date)
+#: src/components/RecurringTaskManager.tsx:177
+msgid "<0>Start: {0}</0>"
+msgstr "<0>Inicio: {0}</0>"
+
+#: src/components/Sidebar.tsx:124
+msgid "<0>TareasZen</0>"
+msgstr "<0>TareasZen</0>"
+
+#: src/components/RecurringTaskForm.tsx:66 src/components/TaskForm.tsx:71
+msgid "<0>Title *</0>"
+msgstr "<0>Título *</0>"
+
+#: src/components/StartupNotifications.tsx:95
+msgid "<0>Understood</0>"
+msgstr "<0>Entendido</0>"
+
+#: src/components/Sidebar.tsx:143
+msgid "<0>Views</0>"
+msgstr "<0>Opiniones</0>"
+
+#: src/components/Settings.tsx:113
+msgid "<0>Zen Mode</0>"
+msgstr "<0>Modo Zen</0>"
+
+#: src/components/ZenDialog.tsx:17
+msgid "Accomplished. Roll your neck gently."
+msgstr "Logrado. Mueve el cuello suavemente."
+
+#: src/components/LabelManager.tsx:102
+msgid "Add"
+msgstr "Añadir"
+
+#: src/components/FilterBar.tsx:59 src/components/FilterBar.tsx:74
+msgid "All"
+msgstr "Todo"
+
+#: src/components/Sidebar.tsx:153
+msgid "All Tasks"
+msgstr "Todas las tareas"
+
+#: src/components/FilterBar.tsx:41
+msgid "Ascending"
+msgstr "Ascendente"
+
+#: src/components/Settings.tsx:77
+msgid "Backup created: {backupFile}"
+msgstr "Copia de seguridad creada: {backupFile}"
+
+#: src/components/Settings.tsx:81
+msgid "Backup failed: {error}"
+msgstr "Copia de seguridad fallida: {error}"
+
+#: src/components/LabelManager.tsx:135 src/components/RecurringTaskForm.tsx:192
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/components/ZenDialog.tsx:39
+msgid "Check your posture. Sit up straight."
+msgstr "Revisa tu postura. Siéntate recta."
+
+#: src/components/LabelManager.tsx:176
+#: src/components/RecurringTaskManager.tsx:226
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/components/ZenDialog.tsx:19
+msgid "Complete. Stand up and stretch."
+msgstr "Completo. Levántate y estiraos."
+
+#: src/components/FilterBar.tsx:36
+msgid "completed"
+msgstr "completado"
+
+#: src/components/FilterBar.tsx:76
+msgid "Completed"
+msgstr "Completado"
+
+#: src/components/ZenDialog.tsx:25
+msgid "Completed. Give yourself a moment of stillness."
+msgstr "Completado. Date un momento de quietud."
+
+#: src/components/ZenDialog.tsx:60
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/components/RecurringTaskForm.tsx:197 src/components/TaskForm.tsx:177
+msgid "Create"
+msgstr "Crear"
+
+#: src/components/FilterBar.tsx:33
+msgid "created"
+msgstr "creado"
+
+#: src/components/Settings.tsx:73
+msgid "Creating backup..."
+msgstr "Creando backup..."
+
+#: src/components/Settings.tsx:199
+msgid "Daily"
+msgstr "Diariamente"
+
+#. placeholder {0}: task.interval_value
+#: src/components/RecurringTaskManager.tsx:128
+msgid "Day {0} of each month"
+msgstr "Día {0} de cada mes"
+
+#: src/components/RecurringTaskForm.tsx:162
+msgid "Day of month"
+msgstr "Día del mes"
+
+#: src/components/RecurringTaskForm.tsx:159
+msgid "Days"
+msgstr "Días"
+
+#: src/components/RecurringTaskManager.tsx:214 src/components/TaskCard.tsx:75
+msgid "Delete"
+msgstr "Borrar"
+
+#. placeholder {0}: label.name
+#: src/components/LabelManager.tsx:51
+msgid "Delete label \"{0}\"?"
+msgstr "¿Eliminar la etiqueta \"{0}\"?"
+
+#: src/components/LabelManager.tsx:59
+msgid ""
+"Delete label \"{labelName}\"?\n"
+"\n"
+"This label is assigned to {length} {length, plural, one {task} other {tasks}}. The tasks will not be deleted, only the label assignment."
+msgstr ""
+"¿Eliminar la etiqueta \"{labelName}\"?\n"
+"\n"
+"Esta etiqueta se asigna a {length} {longitud, plural, uno {task} otro {tasks}}. Las tareas no se eliminarán, solo la asignación de etiquetas."
+
+#: src/components/RecurringTaskManager.tsx:115
+msgid "Delete this recurring task?"
+msgstr "¿Eliminar esta tarea recurrente?"
+
+#: src/App.tsx:252
+msgid "Delete this task?"
+msgstr "¿Eliminar esta tarea?"
+
+#: src/components/FilterBar.tsx:41
+msgid "Descending"
+msgstr "Descendente"
+
+#: src/components/TaskForm.tsx:93
+msgid "Description"
+msgstr "Descripción"
+
+#: src/components/ZenDialog.tsx:16
+msgid "Done. Look out the window for a moment."
+msgstr "Hecho. Mira por la ventana un momento."
+
+#: src/components/ZenDialog.tsx:24
+msgid "Done. Notice how you're sitting right now."
+msgstr "Hecho. Fíjate en cómo estás sentado ahora mismo."
+
+#: src/components/FilterBar.tsx:34
+msgid "due"
+msgstr "límite"
+
+#: src/components/RecurringTaskManager.tsx:207 src/components/TaskCard.tsx:72
+msgid "Edit"
+msgstr "Editar"
+
+#: src/components/RecurringTaskForm.tsx:62
+msgid "Edit Recurring Task"
+msgstr "Editar Tarea recurrente"
+
+#: src/components/TaskForm.tsx:67
+msgid "Edit task"
+msgstr "Modificar tarea"
+
+#: src/components/RecurringTaskForm.tsx:180
+msgid "End date"
+msgstr "Fecha de finalización"
+
+#: src/components/Settings.tsx:67
+msgid "Error saving settings"
+msgstr "Error al guardar los ajustes"
+
+#. placeholder {0}: task.interval_value
+#. placeholder {1}: intervalLabels[task.interval_unit]
+#: src/components/RecurringTaskManager.tsx:130
+msgid "Every {0} {1}"
+msgstr "Cada {0} {1}"
+
+#: src/components/Settings.tsx:201
+msgid "Every 2 weeks"
+msgstr "Cada 2 Semanas"
+
+#: src/components/ZenDialog.tsx:18
+msgid "Finished. Close your eyes for 10 seconds."
+msgstr "Terminado. Cierra los ojos durante 10 segundos."
+
+#: src/components/ZenDialog.tsx:43
+msgid "Give your mind a moment of rest."
+msgstr "Dale un momento de descanso a tu mente."
+
+#: src/components/ZenDialog.tsx:20
+msgid "Good job. Take three slow breaths."
+msgstr "Buen trabajo. Respira despacio tres veces."
+
+#: src/components/ZenDialog.tsx:13
+msgid "Great work. How about a short walk?"
+msgstr "Buen trabajo. ¿Qué tal un paseo corto?"
+
+#: src/components/ZenDialog.tsx:23
+msgid "Great. How about a cup of tea?"
+msgstr "Genial. ¿Qué tal una taza de té?"
+
+#: src/components/FilterBar.tsx:60 src/components/RecurringTaskForm.tsx:105
+#: src/components/RecurringTaskManager.tsx:22 src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:110 src/components/TaskView.tsx:14
+msgid "High"
+msgstr "Alto"
+
+#: src/components/ZenDialog.tsx:32
+msgid "How about a quick walk?"
+msgstr "¿Qué tal un paseo rápido?"
+
+#: src/components/ZenDialog.tsx:42
+msgid "How about some fresh air?"
+msgstr "¿Qué tal un poco de aire fresco?"
+
+#: src/components/ZenDialog.tsx:38
+msgid "Look away from the screen for 20 seconds."
+msgstr "Aparta la mirada de la pantalla durante 20 segundos."
+
+#: src/components/FilterBar.tsx:62 src/components/RecurringTaskForm.tsx:103
+#: src/components/RecurringTaskManager.tsx:22 src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:108 src/components/TaskView.tsx:14
+msgid "Low"
+msgstr "Bajo"
+
+#: src/components/LabelManager.tsx:79 src/components/Sidebar.tsx:164
+msgid "Manage labels"
+msgstr "Gestionar sellos"
+
+#: src/components/FilterBar.tsx:61 src/components/RecurringTaskForm.tsx:104
+#: src/components/RecurringTaskManager.tsx:22 src/components/TaskCard.tsx:17
+#: src/components/TaskForm.tsx:109 src/components/TaskView.tsx:14
+msgid "Medium"
+msgstr "Mediano"
+
+#: src/components/Settings.tsx:202
+msgid "Monthly"
+msgstr "Mensual"
+
+#: src/components/RecurringTaskForm.tsx:161
+msgid "Months"
+msgstr "Meses"
+
+#: src/components/Settings.tsx:86
+msgid "Never"
+msgstr "Nunca"
+
+#: src/components/LabelManager.tsx:86
+msgid "New label..."
+msgstr "Nueva discográfica..."
+
+#: src/components/RecurringTaskForm.tsx:62
+msgid "New Recurring Task"
+msgstr "Nueva tarea recurrente"
+
+#: src/components/TaskForm.tsx:67
+msgid "New task"
+msgstr "Nueva tarea"
+
+#: src/components/ZenDialog.tsx:26
+msgid "Nice work. Let your shoulders drop."
+msgstr "Buen trabajo. Deja caer los hombros."
+
+#: src/components/ZenDialog.tsx:15
+msgid "Nice! Time for a sip of water."
+msgstr "¡Genial! Hora de un sorbo de agua."
+
+#: src/components/Sidebar.tsx:188
+msgid "No labels"
+msgstr "Sin etiquetas"
+
+#: src/components/LabelManager.tsx:170
+msgid "No labels created yet"
+msgstr "Aún no se han creado etiquetas"
+
+#: src/components/RecurringTaskManager.tsx:154
+msgid "No recurring tasks configured"
+msgstr "No hay tareas recurrentes configuradas"
+
+#: src/components/RecurringTaskManager.tsx:22 src/components/TaskCard.tsx:17
+#: src/components/TaskView.tsx:14
+msgid "None"
+msgstr "Ninguno"
+
+#: src/components/ZenDialog.tsx:44
+msgid "Notice your breathing. Slow it down."
+msgstr "Fíjate en tu respiración. Ve más despacio."
+
+#: src/components/FilterBar.tsx:75
+msgid "Open"
+msgstr "Abierto"
+
+#: src/components/RecurringTaskForm.tsx:119
+msgid "Optional"
+msgstr "Opcional"
+
+#: src/components/RecurringTaskForm.tsx:88
+msgid "Optional description..."
+msgstr "Descripción opcional..."
+
+#: src/components/RecurringTaskManager.tsx:196
+msgid "Pause"
+msgstr "Pausa"
+
+#: src/components/ZenDialog.tsx:31
+msgid "Pause for a moment. Take three deep breaths."
+msgstr "Pausa un momento. Respira hondo tres veces."
+
+#: src/components/FilterBar.tsx:32
+msgid "priority"
+msgstr "prioridad"
+
+#: src/components/FilterBar.tsx:52
+msgid "Priority:"
+msgstr "Prioridad:"
+
+#: src/components/Settings.tsx:99
+msgid "Recurring Tasks"
+msgstr "Tareas recurrentes"
+
+#: src/components/ZenDialog.tsx:41
+msgid "Relax your face muscles. Unclench your jaw."
+msgstr "Relaja los músculos de la cara. Suelta la mandíbula."
+
+#: src/components/FilterBar.tsx:35
+msgid "reminder"
+msgstr "recordatorio"
+
+#: src/components/ZenDialog.tsx:33
+msgid "Rest your eyes. Look at something far away."
+msgstr "Descansa los ojos. Mira algo lejano."
+
+#: src/components/RecurringTaskManager.tsx:196
+msgid "Resume"
+msgstr "Reanudar"
+
+#: src/components/ZenDialog.tsx:34
+msgid "Roll your shoulders and relax your jaw."
+msgstr "Enróllate de hombros y relaja la mandíbula."
+
+#: src/components/LabelManager.tsx:138 src/components/RecurringTaskForm.tsx:197
+#: src/components/Settings.tsx:235 src/components/TaskForm.tsx:177
+msgid "Save"
+msgstr "Guardar"
+
+#: src/components/Settings.tsx:235
+msgid "Saving..."
+msgstr "Guardando…"
+
+#: src/App.tsx:311
+msgid "Search tasks..."
+msgstr "Tareas de búsqueda..."
+
+#: src/components/Settings.tsx:96 src/components/Sidebar.tsx:136
+msgid "Settings"
+msgstr "Ajustes"
+
+#: src/components/Settings.tsx:63
+msgid "Settings saved"
+msgstr "Ajustes guardados"
+
+#: src/components/FilterBar.tsx:30
+msgid "sort by:"
+msgstr "Ordenar por:"
+
+#: src/components/RecurringTaskForm.tsx:169
+msgid "Start date *"
+msgstr "Fecha de inicio *"
+
+#: src/components/FilterBar.tsx:67
+msgid "Status:"
+msgstr "Estado:"
+
+#: src/components/ZenDialog.tsx:37
+msgid "Stretch your hands and wrists."
+msgstr "Estira las manos y las muñecas."
+
+#: src/components/ZenDialog.tsx:21
+msgid "Success. Rest your eyes from the screen."
+msgstr "Éxito. Aparta la vista de la pantalla."
+
+#: src/components/ZenDialog.tsx:36
+msgid "Take a mindful minute. How are you feeling?"
+msgstr "Tómate un minuto con atención. ¿Cómo te encuentras?"
+
+#: src/components/ZenDialog.tsx:14
+msgid "Task complete. Stretch your shoulders."
+msgstr "Tarea cumplida. Estira los hombros."
+
+#: src/components/TaskForm.tsx:79
+msgid "Task name"
+msgstr "Nombre de la tarea"
+
+#: src/components/RecurringTaskForm.tsx:74
+msgid "Task title..."
+msgstr "Título de la tarea..."
+
+#: src/components/ZenDialog.tsx:40
+msgid "Time for a micro-break. Breathe slowly."
+msgstr "Hora de un micro-descanso. Respira despacio."
+
+#: src/components/ZenDialog.tsx:30
+msgid "Time for a short break. Stand up and stretch."
+msgstr "Hora de un pequeño descanso. Levántate y estiraos."
+
+#: src/components/ZenDialog.tsx:35
+msgid "Time to hydrate. Get a glass of water."
+msgstr "Hora de hidratarse. Toma un vaso de agua."
+
+#: src/components/TaskCard.tsx:69
+msgid "View"
+msgstr "Ver"
+
+#: src/components/Settings.tsx:200
+msgid "Weekly"
+msgstr "Semanal"
+
+#: src/components/RecurringTaskForm.tsx:160
+msgid "Weeks"
+msgstr "Semanas"
+
+#: src/components/ZenDialog.tsx:12
+msgid "Well done. Take a deep breath."
+msgstr "Bien hecho. Respira hondo."
+
+#: src/components/ZenDialog.tsx:22
+msgid "Well done. Wiggle your fingers and toes."
+msgstr "Bien hecho. Mueve los dedos de las manos y los pies."
+
+#: src/components/ZenDialog.tsx:56
+msgid "Zen Monk"
+msgstr "Monje Zen"

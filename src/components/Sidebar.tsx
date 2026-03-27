@@ -1,4 +1,5 @@
-import { Settings, ClipboardList } from "lucide-react";
+import { Settings, ClipboardList, GripVertical } from "lucide-react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   DndContext,
   closestCenter,
@@ -36,6 +37,7 @@ interface SortableLabelProps {
 }
 
 function SortableLabel({ label, isSelected, onSelect }: SortableLabelProps) {
+  const { t } = useLingui();
   const {
     attributes,
     listeners,
@@ -62,7 +64,7 @@ function SortableLabel({ label, isSelected, onSelect }: SortableLabelProps) {
         {...attributes}
         {...listeners}
       >
-        ⠿
+        <GripVertical size={16} />
       </span>
       <button
         className="label-button"
@@ -86,6 +88,7 @@ export function Sidebar({
   onOpenSettings,
   onLabelsReorder,
 }: SidebarProps) {
+  const { t } = useLingui();
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -118,7 +121,9 @@ export function Sidebar({
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h1 className="app-title">TareasZen</h1>
+        <Trans>
+          <h1 className="app-title">TareasZen</h1>
+        </Trans>
       </div>
 
       <nav className="sidebar-nav">
@@ -128,12 +133,16 @@ export function Sidebar({
             <span className="nav-icon">
               <Settings size={16} />
             </span>
-            Settings
+            <Trans>
+              Settings
+            </Trans>
           </button>
         </section>
         
         <section className="nav-section">
-          <h3 className="nav-section-title">Views</h3>
+          <Trans>
+            <h3 className="nav-section-title">Views</h3>
+          </Trans>
           <button
             className={`nav-item ${!selectedLabelId ? "active" : ""}`}
             onClick={() => onSelectLabel(null)}
@@ -141,14 +150,18 @@ export function Sidebar({
             <span className="nav-icon">
               <ClipboardList size={16} />
             </span>
-            All Tasks
+            <Trans>
+              All Tasks
+            </Trans>
           </button>
         </section>
 
         <section className="nav-section">
           <div className="nav-section-header">
-            <h3 className="nav-section-title">Labels</h3>
-            <button className="btn-icon" onClick={onManageLabels} title="Manage labels">
+            <Trans>
+              <h3 className="nav-section-title">Labels</h3>
+            </Trans>
+            <button className="btn-icon" onClick={onManageLabels} title={t`Manage labels`}>
               <Settings size={16} />
             </button>
           </div>
@@ -172,7 +185,7 @@ export function Sidebar({
             </SortableContext>
           </DndContext>
           {labels.length === 0 && (
-            <p className="nav-empty">No labels</p>
+            <p className="nav-empty"><Trans>No labels</Trans></p>
           )}
         </section>
 

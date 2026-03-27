@@ -1,4 +1,8 @@
-import { Bell, Calendar, CalendarPlus } from "lucide-react";
+import { Bell, Calendar, CalendarPlus, Check } from "lucide-react";
+import { Trans, useLingui } from "@lingui/react/macro";
+import { Trans as Translation } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
+
 import { TaskWithLabels } from "../types";
 
 interface TaskViewProps {
@@ -7,9 +11,10 @@ interface TaskViewProps {
   onEdit: () => void;
 }
 
-const priorityLabels = ["", "Low", "Medium", "High"];
+const priorityLabels = [msg`None`, msg`Low`, msg`Medium`, msg`High`];
 
 export function TaskView({ taskWithLabels, onClose, onEdit }: TaskViewProps) {
+  const { t } = useLingui();
   const { task, labels } = taskWithLabels;
 
   const formatDate = (dateString: string | null) => {
@@ -37,20 +42,26 @@ export function TaskView({ taskWithLabels, onClose, onEdit }: TaskViewProps) {
       <div className="modal modal-wide task-view">
         <div className="task-view-header">
           <h2>{task.title}</h2>
-          <span className={`priority-badge priority-${task.priority}`}>
-            {priorityLabels[task.priority]}
-          </span>
+          {task.priority > 0 && (
+            <span className={`priority-badge priority-${task.priority}`}>
+              <Translation id={priorityLabels[task.priority]?.id} />
+            </span>
+          )}
         </div>
 
         {task.completed && (
-          <div className="task-view-status completed">
-            ✓ Completed on {formatDateTime(task.completed_at)}
-          </div>
+          <Trans>
+            <div className="task-view-status completed">
+              <Check size={16} /> Completed on {formatDateTime(task.completed_at)}
+            </div>
+          </Trans>
         )}
 
         {labels.length > 0 && (
           <div className="task-view-section">
-            <h3>Labels</h3>
+            <Trans>
+              <h3>Labels</h3>
+            </Trans>
             <div className="task-view-labels">
               {labels.map((label) => (
                 <span key={label.id} className="task-view-label">
@@ -67,36 +78,50 @@ export function TaskView({ taskWithLabels, onClose, onEdit }: TaskViewProps) {
 
         {task.description && (
           <div className="task-view-section">
-            <h3>Description</h3>
+            <Trans>
+              <h3>Description</h3>
+            </Trans>
             <p className="task-view-description">{task.description}</p>
           </div>
         )}
 
         <div className="task-view-section">
-          <h3>Dates</h3>
+          <Trans>
+            <h3>Dates</h3>
+          </Trans>
           <div className="task-view-dates">
             <div className="task-view-date">
-              <span className="task-view-date-label due"><Calendar size={16} /> Due</span>
+              <Trans>
+                <span className="task-view-date-label due"><Calendar size={16} /> Due</span>
+              </Trans>
               <span className="task-view-date-value">{formatDate(task.due_date)}</span>
             </div>
             <div className="task-view-date">
-              <span className="task-view-date-label reminder"><Bell size={16} /> Reminder</span>
+              <Trans>
+                <span className="task-view-date-label reminder"><Bell size={16} /> Reminder</span>
+              </Trans>
               <span className="task-view-date-value">{formatDate(task.reminder_date)}</span>
             </div>
             <div className="task-view-date">
-              <span className="task-view-date-label created"><CalendarPlus size={16} /> Created</span>
+              <Trans>
+                <span className="task-view-date-label created"><CalendarPlus size={16} /> Created</span>
+              </Trans>
               <span className="task-view-date-value">{formatDateTime(task.created_at)}</span>
             </div>
           </div>
         </div>
 
         <div className="form-actions">
-          <button className="btn-secondary" onClick={onClose}>
-            Close
-          </button>
-          <button className="btn-primary" onClick={onEdit}>
-            Edit
-          </button>
+          <Trans>
+            <button className="btn-secondary" onClick={onClose}>
+              Close
+            </button>
+          </Trans>
+          <Trans>
+            <button className="btn-primary" onClick={onEdit}>
+              Edit
+            </button>
+          </Trans>
         </div>
       </div>
     </div>
