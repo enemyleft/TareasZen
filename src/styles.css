@@ -63,6 +63,11 @@ body {
   box-sizing: border-box;
 }
 
+.os-windows .sidebar-header {
+  padding-top: 32px;
+  padding-bottom: 29px;
+}
+
 .app-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -159,6 +164,10 @@ body {
   justify-content: space-between;
   padding: 24px 20px 23px;
   border-bottom: 1px solid var(--border-color);
+}
+
+.os-windows header {
+  padding-top: 32px;
 }
 
 .header h1 {

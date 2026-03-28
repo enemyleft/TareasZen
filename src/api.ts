@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/tauri";
-import { confirm } from "@tauri-apps/api/dialog";
+import { invoke } from "@tauri-apps/api/core";
+import { confirm } from "@tauri-apps/plugin-dialog";
 import { Task, Label, TaskWithLabels, TaskFilter, RecurringTask } from "./types";
 
 // Task API
