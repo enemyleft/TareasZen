@@ -5,15 +5,17 @@
 
 mod database;
 
-use database::{Database, Label, Task, TaskWithLabels, TaskFilter, RecurringTask};
+use database::{Database, Label, RecurringTask, Task, TaskFilter, TaskWithLabels};
 use std::sync::Mutex;
 use tauri::State;
+use tauri::Manager;
+use tauri_plugin_decorum::WebviewWindowExt; // adds helper methods to WebviewWindow
 
 struct AppState {
     db: Database,
 }
 
-// Get OS Info 
+// Get OS Info
 #[tauri::command]
 fn get_platform() -> Result<String, String> {
     Ok(std::env::consts::OS.to_string())
@@ -30,12 +32,17 @@ fn create_task(
     reminder_date: Option<String>,
 ) -> Result<Task, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.create_task(title, description, priority, due_date, reminder_date)
+    state
+        .db
+        .create_task(title, description, priority, due_date, reminder_date)
         .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn get_tasks(state: State<Mutex<AppState>>, filter: TaskFilter) -> Result<Vec<TaskWithLabels>, String> {
+fn get_tasks(
+    state: State<Mutex<AppState>>,
+    filter: TaskFilter,
+) -> Result<Vec<TaskWithLabels>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
     state.db.get_tasks(filter).map_err(|e| e.to_string())
 }
@@ -54,9 +61,16 @@ fn delete_task(state: State<Mutex<AppState>>, task_id: String) -> Result<(), Str
 
 // Label commands
 #[tauri::command]
-fn create_label(state: State<Mutex<AppState>>, name: String, color: String) -> Result<Label, String> {
+fn create_label(
+    state: State<Mutex<AppState>>,
+    name: String,
+    color: String,
+) -> Result<Label, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.create_label(name, color).map_err(|e| e.to_string())
+    state
+        .db
+        .create_label(name, color)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -66,9 +80,15 @@ fn get_all_labels(state: State<Mutex<AppState>>) -> Result<Vec<Label>, String> {
 }
 
 #[tauri::command]
-fn get_tasks_by_label(state: State<Mutex<AppState>>, label_id: String) -> Result<Vec<TaskWithLabels>, String> {
+fn get_tasks_by_label(
+    state: State<Mutex<AppState>>,
+    label_id: String,
+) -> Result<Vec<TaskWithLabels>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.get_tasks_by_label(&label_id).map_err(|e| e.to_string())
+    state
+        .db
+        .get_tasks_by_label(&label_id)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -78,9 +98,15 @@ fn update_label(state: State<Mutex<AppState>>, label: Label) -> Result<(), Strin
 }
 
 #[tauri::command]
-fn update_label_positions(state: State<Mutex<AppState>>, positions: Vec<(String, i32)>) -> Result<(), String> {
+fn update_label_positions(
+    state: State<Mutex<AppState>>,
+    positions: Vec<(String, i32)>,
+) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.update_label_positions(positions).map_err(|e| e.to_string())
+    state
+        .db
+        .update_label_positions(positions)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -91,15 +117,29 @@ fn delete_label(state: State<Mutex<AppState>>, label_id: String) -> Result<(), S
 
 // Task-Label association commands
 #[tauri::command]
-fn add_label_to_task(state: State<Mutex<AppState>>, task_id: String, label_id: String) -> Result<(), String> {
+fn add_label_to_task(
+    state: State<Mutex<AppState>>,
+    task_id: String,
+    label_id: String,
+) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.add_label_to_task(&task_id, &label_id).map_err(|e| e.to_string())
+    state
+        .db
+        .add_label_to_task(&task_id, &label_id)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn remove_label_from_task(state: State<Mutex<AppState>>, task_id: String, label_id: String) -> Result<(), String> {
+fn remove_label_from_task(
+    state: State<Mutex<AppState>>,
+    task_id: String,
+    label_id: String,
+) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.remove_label_from_task(&task_id, &label_id).map_err(|e| e.to_string())
+    state
+        .db
+        .remove_label_from_task(&task_id, &label_id)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -111,11 +151,18 @@ fn get_all_settings(state: State<Mutex<AppState>>) -> Result<Vec<(String, String
 #[tauri::command]
 fn set_setting(state: State<Mutex<AppState>>, key: String, value: String) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.set_setting(&key, &value).map_err(|e| e.to_string())
+    state
+        .db
+        .set_setting(&key, &value)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn create_backup(state: State<Mutex<AppState>>, backup_path: String, db_path: String) -> Result<String, String> {
+fn create_backup(
+    state: State<Mutex<AppState>>,
+    backup_path: String,
+    db_path: String,
+) -> Result<String, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
     state.db.create_backup(&backup_path, &db_path)
 }
@@ -131,36 +178,50 @@ fn get_default_backup_path() -> Result<String, String> {
 #[tauri::command]
 fn get_db_path() -> Result<String, String> {
     dirs::data_local_dir()
-        .map(|p| p.join("tareaszen").join("tareaszen.db").to_string_lossy().to_string())
+        .map(|p| {
+            p.join("tareaszen")
+                .join("tareaszen.db")
+                .to_string_lossy()
+                .to_string()
+        })
         .ok_or_else(|| "Could not determine data directory".to_string())
 }
 
 #[tauri::command]
 fn check_and_run_backup(state: State<Mutex<AppState>>) -> Result<Option<String>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    
+
     if !state.db.should_backup() {
         return Ok(None);
     }
-    
-    let backup_path = state.db.get_setting("backup_path")
+
+    let backup_path = state
+        .db
+        .get_setting("backup_path")
         .map_err(|e| e.to_string())?
         .unwrap_or_default();
-    
+
     if backup_path.is_empty() {
         return Ok(None);
     }
-    
+
     let db_path = dirs::data_local_dir()
-        .map(|p| p.join("tareaszen").join("tareaszen.db").to_string_lossy().to_string())
+        .map(|p| {
+            p.join("tareaszen")
+                .join("tareaszen.db")
+                .to_string_lossy()
+                .to_string()
+        })
         .ok_or_else(|| "Could not determine data directory".to_string())?;
-    
+
     let backup_file = state.db.create_backup(&backup_path, &db_path)?;
     Ok(Some(backup_file))
 }
 
 #[tauri::command]
-fn get_notification_tasks(state: State<Mutex<AppState>>) -> Result<(Vec<TaskWithLabels>, Vec<TaskWithLabels>), String> {
+fn get_notification_tasks(
+    state: State<Mutex<AppState>>,
+) -> Result<(Vec<TaskWithLabels>, Vec<TaskWithLabels>), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
     state.db.get_notification_tasks().map_err(|e| e.to_string())
 }
@@ -178,32 +239,55 @@ fn create_recurring_task(
     end_date: Option<String>,
 ) -> Result<RecurringTask, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.create_recurring_task(title, description, priority, interval_value, interval_unit, due_date_offset, start_date, end_date)
+    state
+        .db
+        .create_recurring_task(
+            title,
+            description,
+            priority,
+            interval_value,
+            interval_unit,
+            due_date_offset,
+            start_date,
+            end_date,
+        )
         .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn get_all_recurring_tasks(state: State<Mutex<AppState>>) -> Result<Vec<RecurringTask>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.get_all_recurring_tasks().map_err(|e| e.to_string())
+    state
+        .db
+        .get_all_recurring_tasks()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn update_recurring_task(state: State<Mutex<AppState>>, task: RecurringTask) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.update_recurring_task(task).map_err(|e| e.to_string())
+    state
+        .db
+        .update_recurring_task(task)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn delete_recurring_task(state: State<Mutex<AppState>>, id: String) -> Result<(), String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.delete_recurring_task(&id).map_err(|e| e.to_string())
+    state
+        .db
+        .delete_recurring_task(&id)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn process_recurring_tasks(state: State<Mutex<AppState>>) -> Result<Vec<String>, String> {
     let state = state.lock().map_err(|e| e.to_string())?;
-    state.db.process_recurring_tasks().map_err(|e| e.to_string())
+    state
+        .db
+        .process_recurring_tasks()
+        .map_err(|e| e.to_string())
 }
 
 fn main() {
@@ -220,6 +304,28 @@ fn main() {
     let db = Database::new(db_path.to_str().unwrap()).expect("Failed to initialize database");
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_decorum::init())
+        .setup(|app| {
+			let main_window = app.get_webview_window("main").unwrap();
+			main_window.create_overlay_titlebar().unwrap();
+
+			// Some macOS-specific helpers
+			#[cfg(target_os = "macos")] {
+				// Set a custom inset to the traffic lights
+				main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
+
+				// Make window transparent without privateApi
+				main_window.make_transparent().unwrap();
+
+				// Set window level
+				// NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
+				main_window.set_window_level(25).unwrap();
+			}
+
+			Ok(())
+		})        
         .manage(Mutex::new(AppState { db }))
         .invoke_handler(tauri::generate_handler![
             get_platform,

@@ -1,7 +1,7 @@
-use chrono::{Utc, Datelike};
-use rusqlite::{Connection, Result as SqliteResult, params};
+use chrono::{Datelike, Utc};
+use rusqlite::{params, Connection, Result as SqliteResult};
 use serde::{Deserialize, Serialize};
-use std::{sync::Mutex};
+use std::sync::Mutex;
 use uuid::Uuid;
 
 pub const DEFAULT_TASK_LIMIT: i32 = 1000;
@@ -40,8 +40,8 @@ pub struct TaskFilter {
     pub priority: Option<i32>,
     pub completed: Option<bool>,
     pub search: Option<String>,
-    pub sort_by: Option<String>,      // "priority", "created_at", "due_date"
-    pub sort_order: Option<String>,   // "asc", "desc"
+    pub sort_by: Option<String>, // "priority", "created_at", "due_date"
+    pub sort_order: Option<String>, // "asc", "desc"
     pub limit: Option<i32>,
 }
 
@@ -52,8 +52,8 @@ pub struct RecurringTask {
     pub description: Option<String>,
     pub priority: i32,
     pub interval_value: i32,
-    pub interval_unit: String,  // "days", "weeks", "months", "day_of_month"
-    pub due_date_offset: Option<i32>,  // days after creation
+    pub interval_unit: String, // "days", "weeks", "months", "day_of_month"
+    pub due_date_offset: Option<i32>, // days after creation
     pub start_date: String,
     pub end_date: Option<String>,
     pub is_active: bool,
@@ -77,7 +77,7 @@ impl Database {
 
     fn init_schema(&self) -> SqliteResult<()> {
         let conn = self.conn.lock().unwrap();
-        
+
         conn.execute_batch(
             "
             CREATE TABLE IF NOT EXISTS tasks (
@@ -142,14 +142,21 @@ impl Database {
                 created_at TEXT NOT NULL
             );
 
-            "
+            ",
         )?;
-        
+
         Ok(())
     }
 
     // Task operations
-    pub fn create_task(&self, title: String, description: Option<String>, priority: i32, due_date: Option<String>, reminder_date: Option<String>) -> SqliteResult<Task> {
+    pub fn create_task(
+        &self,
+        title: String,
+        description: Option<String>,
+        priority: i32,
+        due_date: Option<String>,
+        reminder_date: Option<String>,
+    ) -> SqliteResult<Task> {
         let conn = self.conn.lock().unwrap();
         let id = Uuid::new_v4().to_string();
         let created_at = Utc::now().to_rfc3339();
@@ -174,44 +181,44 @@ impl Database {
 
     pub fn get_tasks(&self, filter: TaskFilter) -> SqliteResult<Vec<TaskWithLabels>> {
         let conn = self.conn.lock().unwrap();
-        
+
         let limit = filter.limit.unwrap_or(DEFAULT_TASK_LIMIT);
         let sort_by = filter.sort_by.unwrap_or_else(|| "created_at".to_string());
         let sort_order = filter.sort_order.unwrap_or_else(|| "desc".to_string());
-        
+
         // Build query dynamically
         let mut sql = String::from(
             "SELECT DISTINCT t.id, t.title, t.description, t.priority, t.created_at, 
             t.due_date, t.reminder_date, t.completed, t.completed_at
-            FROM tasks t"
+            FROM tasks t",
         );
-        
+
         let mut conditions: Vec<String> = Vec::new();
         let mut params: Vec<Box<dyn rusqlite::ToSql>> = Vec::new();
-        
+
         // Join with task_labels if filtering by label
         if filter.label_id.is_some() {
             sql.push_str(" INNER JOIN task_labels tl ON t.id = tl.task_id");
         }
-        
+
         // Label filter
         if let Some(ref label_id) = filter.label_id {
             conditions.push(format!("tl.label_id = ?{}", params.len() + 1));
             params.push(Box::new(label_id.clone()));
         }
-        
+
         // Priority filter
         if let Some(priority) = filter.priority {
             conditions.push(format!("t.priority = ?{}", params.len() + 1));
             params.push(Box::new(priority));
         }
-        
+
         // Completed filter
         if let Some(completed) = filter.completed {
             conditions.push(format!("t.completed = ?{}", params.len() + 1));
             params.push(Box::new(completed as i32));
         }
-        
+
         // Search filter
         if let Some(ref search) = filter.search {
             let search_pattern = format!("%{}%", search);
@@ -223,13 +230,13 @@ impl Database {
             params.push(Box::new(search_pattern.clone()));
             params.push(Box::new(search_pattern));
         }
-        
+
         // Add WHERE clause
         if !conditions.is_empty() {
             sql.push_str(" WHERE ");
             sql.push_str(&conditions.join(" AND "));
         }
-        
+
         // Add ORDER BY
         let order_column = match sort_by.as_str() {
             "priority" => "t.priority",
@@ -240,7 +247,7 @@ impl Database {
             _ => "t.created_at",
         };
         let order_dir = if sort_order == "asc" { "ASC" } else { "DESC" };
-        
+
         // Handle NULL values in sorting, with priority as secondary sort
         if sort_by == "due_date" {
             sql.push_str(&format!(
@@ -265,57 +272,67 @@ impl Database {
         } else {
             sql.push_str(&format!(" ORDER BY {} {}", order_column, order_dir));
         }
-        
+
         // Add LIMIT
         sql.push_str(&format!(" LIMIT {}", limit));
-        
+
         // Execute query
         let params_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|p| p.as_ref()).collect();
         let mut stmt = conn.prepare(&sql)?;
-        
-        let tasks: Vec<Task> = stmt.query_map(params_refs.as_slice(), |row| {
-            Ok(Task {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                created_at: row.get(4)?,
-                due_date: row.get(5)?,
-                reminder_date: row.get(6)?,
-                completed: row.get::<_, i32>(7)? != 0,
-                completed_at: row.get(8)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
-        
+
+        let tasks: Vec<Task> = stmt
+            .query_map(params_refs.as_slice(), |row| {
+                Ok(Task {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    description: row.get(2)?,
+                    priority: row.get(3)?,
+                    created_at: row.get(4)?,
+                    due_date: row.get(5)?,
+                    reminder_date: row.get(6)?,
+                    completed: row.get::<_, i32>(7)? != 0,
+                    completed_at: row.get(8)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
+
         drop(stmt);
-        
+
         // Get labels for each task
         let mut result = Vec::new();
         for task in tasks {
             let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
             result.push(TaskWithLabels { task, labels });
         }
-        
+
         Ok(result)
     }
 
-    fn get_labels_for_task_internal(&self, conn: &Connection, task_id: &str) -> SqliteResult<Vec<Label>> {
+    fn get_labels_for_task_internal(
+        &self,
+        conn: &Connection,
+        task_id: &str,
+    ) -> SqliteResult<Vec<Label>> {
         let mut stmt = conn.prepare(
             "SELECT l.id, l.name, l.color, l.created_at, l.position FROM labels l 
             INNER JOIN task_labels tl ON l.id = tl.label_id 
             WHERE tl.task_id = ?1
-            ORDER BY l.position"
+            ORDER BY l.position",
         )?;
 
-        let labels = stmt.query_map([task_id], |row| {
-            Ok(Label {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                color: row.get(2)?,
-                created_at: row.get(3)?,
-                position: row.get(4)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
+        let labels = stmt
+            .query_map([task_id], |row| {
+                Ok(Label {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    color: row.get(2)?,
+                    created_at: row.get(3)?,
+                    position: row.get(4)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
 
         Ok(labels)
     }
@@ -329,19 +346,22 @@ impl Database {
             WHERE tl.label_id = ?1"
         )?;
 
-        let tasks: Vec<Task> = stmt.query_map([label_id], |row| {
-            Ok(Task {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                created_at: row.get(4)?,
-                due_date: row.get(5)?,
-                reminder_date: row.get(6)?,
-                completed: row.get::<_, i32>(7)? != 0,
-                completed_at: row.get(8)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
+        let tasks: Vec<Task> = stmt
+            .query_map([label_id], |row| {
+                Ok(Task {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    description: row.get(2)?,
+                    priority: row.get(3)?,
+                    created_at: row.get(4)?,
+                    due_date: row.get(5)?,
+                    reminder_date: row.get(6)?,
+                    completed: row.get::<_, i32>(7)? != 0,
+                    completed_at: row.get(8)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
 
         drop(stmt);
 
@@ -377,7 +397,9 @@ impl Database {
         let created_at = Utc::now().to_rfc3339();
 
         let max_position: i32 = conn
-            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| row.get(0))
+            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| {
+                row.get(0)
+            })
             .unwrap_or(0);
 
         conn.execute(
@@ -396,17 +418,22 @@ impl Database {
 
     pub fn get_all_labels(&self) -> SqliteResult<Vec<Label>> {
         let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT id, name, color, created_at, position FROM labels ORDER BY position, name")?;
+        let mut stmt = conn.prepare(
+            "SELECT id, name, color, created_at, position FROM labels ORDER BY position, name",
+        )?;
 
-        let labels = stmt.query_map([], |row| {
-            Ok(Label {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                color: row.get(2)?,
-                created_at: row.get(3)?,
-                position: row.get(4)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
+        let labels = stmt
+            .query_map([], |row| {
+                Ok(Label {
+                    id: row.get(0)?,
+                    name: row.get(1)?,
+                    color: row.get(2)?,
+                    created_at: row.get(3)?,
+                    position: row.get(4)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
 
         Ok(labels)
     }
@@ -423,7 +450,10 @@ impl Database {
     pub fn update_label_positions(&self, positions: Vec<(String, i32)>) -> SqliteResult<()> {
         let conn = self.conn.lock().unwrap();
         for (id, position) in positions {
-            conn.execute("UPDATE labels SET position = ?1 WHERE id = ?2", params![position, id])?;
+            conn.execute(
+                "UPDATE labels SET position = ?1 WHERE id = ?2",
+                params![position, id],
+            )?;
         }
         Ok(())
     }
@@ -478,33 +508,36 @@ impl Database {
     pub fn get_all_settings(&self) -> SqliteResult<Vec<(String, String)>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT key, value FROM settings")?;
-        let settings = stmt.query_map([], |row| {
-            Ok((row.get(0)?, row.get(1)?))
-        })?.filter_map(|r| r.ok()).collect();
+        let settings = stmt
+            .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?
+            .filter_map(|r| r.ok())
+            .collect();
         Ok(settings)
     }
 
     pub fn create_backup(&self, backup_path: &str, db_path: &str) -> Result<String, String> {
         let timestamp = chrono::Utc::now().format("%Y%m%d_%H%M%S");
         let backup_file = format!("{}/taskflow_backup_{}.db", backup_path, timestamp);
-        
+
         // Create backup directory if needed
         std::fs::create_dir_all(backup_path).map_err(|e| e.to_string())?;
-        
+
         // Copy database file
         std::fs::copy(db_path, &backup_file).map_err(|e| e.to_string())?;
-        
+
         // Update last backup time
         self.set_setting("last_backup", &chrono::Utc::now().to_rfc3339())
             .map_err(|e| e.to_string())?;
-        
+
         Ok(backup_file)
     }
 
-    pub fn get_notification_tasks(&self) -> SqliteResult<(Vec<TaskWithLabels>, Vec<TaskWithLabels>)> {
+    pub fn get_notification_tasks(
+        &self,
+    ) -> SqliteResult<(Vec<TaskWithLabels>, Vec<TaskWithLabels>)> {
         let conn = self.conn.lock().unwrap();
         let now = chrono::Utc::now().to_rfc3339();
-        
+
         // Overdue tasks
         let mut stmt = conn.prepare(
             "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at
@@ -512,23 +545,26 @@ impl Database {
             WHERE completed = 0 AND due_date IS NOT NULL AND due_date < ?1
             ORDER BY due_date ASC"
         )?;
-        
-        let overdue: Vec<Task> = stmt.query_map([&now], |row| {
-            Ok(Task {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                created_at: row.get(4)?,
-                due_date: row.get(5)?,
-                reminder_date: row.get(6)?,
-                completed: row.get::<_, i32>(7)? != 0,
-                completed_at: row.get(8)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
-        
+
+        let overdue: Vec<Task> = stmt
+            .query_map([&now], |row| {
+                Ok(Task {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    description: row.get(2)?,
+                    priority: row.get(3)?,
+                    created_at: row.get(4)?,
+                    due_date: row.get(5)?,
+                    reminder_date: row.get(6)?,
+                    completed: row.get::<_, i32>(7)? != 0,
+                    completed_at: row.get(8)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
+
         drop(stmt);
-        
+
         // Reminder tasks (not already in overdue)
         let mut stmt = conn.prepare(
             "SELECT id, title, description, priority, created_at, due_date, reminder_date, completed, completed_at
@@ -537,61 +573,67 @@ impl Database {
             AND (due_date IS NULL OR due_date >= ?1)
             ORDER BY reminder_date ASC"
         )?;
-        
-        let reminders: Vec<Task> = stmt.query_map([&now], |row| {
-            Ok(Task {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                created_at: row.get(4)?,
-                due_date: row.get(5)?,
-                reminder_date: row.get(6)?,
-                completed: row.get::<_, i32>(7)? != 0,
-                completed_at: row.get(8)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
-        
+
+        let reminders: Vec<Task> = stmt
+            .query_map([&now], |row| {
+                Ok(Task {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    description: row.get(2)?,
+                    priority: row.get(3)?,
+                    created_at: row.get(4)?,
+                    due_date: row.get(5)?,
+                    reminder_date: row.get(6)?,
+                    completed: row.get::<_, i32>(7)? != 0,
+                    completed_at: row.get(8)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
+
         drop(stmt);
-        
+
         // Get labels for each task
         let mut overdue_with_labels = Vec::new();
         for task in overdue {
             let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
             overdue_with_labels.push(TaskWithLabels { task, labels });
         }
-        
+
         let mut reminders_with_labels = Vec::new();
         for task in reminders {
             let labels = self.get_labels_for_task_internal(&conn, &task.id)?;
             reminders_with_labels.push(TaskWithLabels { task, labels });
         }
-        
+
         Ok((overdue_with_labels, reminders_with_labels))
     }
 
     pub fn should_backup(&self) -> bool {
-        let enabled = self.get_setting("backup_enabled")
+        let enabled = self
+            .get_setting("backup_enabled")
             .ok()
             .flatten()
             .map(|v| v == "true")
             .unwrap_or(false);
-        
+
         if !enabled {
             return false;
         }
-        
-        let interval_days: i64 = self.get_setting("backup_interval_days")
+
+        let interval_days: i64 = self
+            .get_setting("backup_interval_days")
             .ok()
             .flatten()
             .and_then(|v| v.parse().ok())
             .unwrap_or(7);
-        
-        let last_backup = self.get_setting("last_backup")
+
+        let last_backup = self
+            .get_setting("last_backup")
             .ok()
             .flatten()
             .and_then(|v| chrono::DateTime::parse_from_rfc3339(&v).ok());
-        
+
         match last_backup {
             None => true,
             Some(last) => {
@@ -647,22 +689,25 @@ impl Database {
             FROM recurring_tasks ORDER BY created_at DESC"
         )?;
 
-        let tasks = stmt.query_map([], |row| {
-            Ok(RecurringTask {
-                id: row.get(0)?,
-                title: row.get(1)?,
-                description: row.get(2)?,
-                priority: row.get(3)?,
-                interval_value: row.get(4)?,
-                interval_unit: row.get(5)?,
-                due_date_offset: row.get(6)?,
-                start_date: row.get(7)?,
-                end_date: row.get(8)?,
-                is_active: row.get::<_, i32>(9)? != 0,
-                last_run: row.get(10)?,
-                created_at: row.get(11)?,
-            })
-        })?.filter_map(|r| r.ok()).collect();
+        let tasks = stmt
+            .query_map([], |row| {
+                Ok(RecurringTask {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    description: row.get(2)?,
+                    priority: row.get(3)?,
+                    interval_value: row.get(4)?,
+                    interval_unit: row.get(5)?,
+                    due_date_offset: row.get(6)?,
+                    start_date: row.get(7)?,
+                    end_date: row.get(8)?,
+                    is_active: row.get::<_, i32>(9)? != 0,
+                    last_run: row.get(10)?,
+                    created_at: row.get(11)?,
+                })
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
 
         Ok(tasks)
     }
@@ -684,19 +729,23 @@ impl Database {
 
     pub fn get_or_create_auto_label(&self) -> SqliteResult<Label> {
         let conn = self.conn.lock().unwrap();
-        
+
         // Check if "auto" label exists
-        let existing: Option<Label> = conn.query_row(
-            "SELECT id, name, color, created_at, position FROM labels WHERE name = 'auto'",
-            [],
-            |row| Ok(Label {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                color: row.get(2)?,
-                created_at: row.get(3)?,
-                position: row.get(4)?,
-            })
-        ).ok();
+        let existing: Option<Label> = conn
+            .query_row(
+                "SELECT id, name, color, created_at, position FROM labels WHERE name = 'auto'",
+                [],
+                |row| {
+                    Ok(Label {
+                        id: row.get(0)?,
+                        name: row.get(1)?,
+                        color: row.get(2)?,
+                        created_at: row.get(3)?,
+                        position: row.get(4)?,
+                    })
+                },
+            )
+            .ok();
 
         if let Some(label) = existing {
             return Ok(label);
@@ -708,7 +757,9 @@ impl Database {
         let color = "#6b7280".to_string(); // gray
 
         let max_position: i32 = conn
-            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| row.get(0))
+            .query_row("SELECT COALESCE(MAX(position), 0) FROM labels", [], |row| {
+                row.get(0)
+            })
             .unwrap_or(0);
 
         conn.execute(
@@ -825,12 +876,11 @@ impl Database {
             "days" => duration_since_last.num_days() >= rt.interval_value as i64,
             "weeks" => duration_since_last.num_weeks() >= rt.interval_value as i64,
             "months" => {
-                let months_diff = (now.year() - last_run.year()) * 12 
+                let months_diff = (now.year() - last_run.year()) * 12
                     + (now.month() as i32 - last_run.month() as i32);
                 months_diff >= rt.interval_value
-            },
+            }
             _ => false,
         }
     }
-
 }
