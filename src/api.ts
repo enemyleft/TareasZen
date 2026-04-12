@@ -99,7 +99,7 @@ export async function getNotificationTasks(): Promise<[TaskWithLabels[], TaskWit
 }
 
 export async function confirmDialog(message: string): Promise<boolean> {
-  return await confirm(message, { title: "TareasZen", type: "warning" });
+  return await confirm(message, { title: "TareasZen", kind: "warning" });
 }
 
 // Recurring Tasks API

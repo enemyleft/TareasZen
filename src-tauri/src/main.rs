@@ -8,7 +8,11 @@ mod database;
 use database::{Database, Label, RecurringTask, Task, TaskFilter, TaskWithLabels};
 use std::sync::Mutex;
 use tauri::State;
+
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 use tauri::Manager;
+
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 use tauri_plugin_decorum::WebviewWindowExt; // adds helper methods to WebviewWindow
 
 struct AppState {
@@ -303,29 +307,40 @@ fn main() {
 
     let db = Database::new(db_path.to_str().unwrap()).expect("Failed to initialize database");
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_decorum::init())
-        .setup(|app| {
-			let main_window = app.get_webview_window("main").unwrap();
-			main_window.create_overlay_titlebar().unwrap();
+        .plugin(tauri_plugin_shell::init());
+        
+        // decorum plugin will be loaded only for windows and macos,
+        // at the moment its not working well with linux at all
+        #[cfg(any(target_os = "windows", target_os = "macos"))]
+        {
+            builder = builder.plugin(tauri_plugin_decorum::init());
+        }
 
-			// Some macOS-specific helpers
-			#[cfg(target_os = "macos")] {
-				// Set a custom inset to the traffic lights
-				main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
+        builder.setup(|_app| {
+            
+            // Custom titlebar only on Windows and macOS
+            #[cfg(any(target_os = "windows", target_os = "macos"))] {
+                let main_window = _app.get_webview_window("main").unwrap();
+                main_window.create_overlay_titlebar().unwrap();
+            }
+            
+            // Some macOS-specific helpers
+            #[cfg(target_os = "macos")] {
+                // Set a custom inset to the traffic lights
+                main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
 
-				// Make window transparent without privateApi
-				main_window.make_transparent().unwrap();
+                // Make window transparent without privateApi
+                main_window.make_transparent().unwrap();
 
-				// Set window level
-				// NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
-				main_window.set_window_level(25).unwrap();
-			}
+                // Set window level
+                // NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
+                main_window.set_window_level(25).unwrap();
+            }
 
-			Ok(())
-		})        
+            Ok(())
+        })        
         .manage(Mutex::new(AppState { db }))
         .invoke_handler(tauri::generate_handler![
             get_platform,
@@ -356,4 +371,5 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
 }
