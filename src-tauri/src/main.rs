@@ -307,7 +307,8 @@ fn main() {
 
     let db = Database::new(db_path.to_str().unwrap()).expect("Failed to initialize database");
 
-    let builder = tauri::Builder::default()
+    #[allow(unused_mut)]
+    let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init());
         
