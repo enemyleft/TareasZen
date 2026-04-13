@@ -3,7 +3,7 @@
 ## [1.2.0] - 13.04.2026
 
 ### Added
-- Borderless window (for Windows and macOS only)
+- Adjusted window title bar with use of "tauri_plugin_decorum" (for Windows and macOS only)
 - Updated all icons with lucide (eliminates dependency to "noto-fonts-emoji" on Linux)
 - Sort by completed_at and reminder_date
 - Upgraded to Tauri 2.0 

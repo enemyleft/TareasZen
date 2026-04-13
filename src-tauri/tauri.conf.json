@@ -24,7 +24,7 @@
   "app": {
     "windows": [
       {
-        "shadow": false,
+        "shadow": true,
         "fullscreen": false,
         "height": 800,
         "resizable": true,
