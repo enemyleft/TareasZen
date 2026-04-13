@@ -38,12 +38,7 @@ node --version  # should be 18+
 npm --version
 ```
 
-### 4. Install emoji fonts (important for icons)
-```
-sudo pacman -S noto-fonts-emoji
-```
-
-### 5. Build the Project
+### 4. Build the Project
 ```bash
 cd tareaszen
 

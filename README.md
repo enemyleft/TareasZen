@@ -33,6 +33,8 @@ A local-first task management app built with Rust, Tauri, and React. No cloud, n
 - Custom backup location
 - Manual backup option
 
+See also [CHANGELOG.md](CHANGELOG.md) for more details.
+
 ### Notifications
 - Startup notifications for overdue tasks and active reminders
 - Periodic check for new notifications (even if app runs for days)
@@ -48,6 +50,7 @@ A local-first task management app built with Rust, Tauri, and React. No cloud, n
 
 - Linux (requires WebKitGTK)
 - Windows (WebView2 included in Windows 10/11)
+- macOS (WebKit (WKWebView), included in macOS)
 
 ## Installation
 

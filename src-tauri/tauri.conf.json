@@ -14,12 +14,12 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "targets": "all"
+    "targets": ["deb", "rpm"]
   },
   "productName": "TareasZen",
   "mainBinaryName": "TareasZen",
   "version": "1.2.0",
-  "identifier": "com.tareaszen.app",
+  "identifier": "com.tareaszen",
   "plugins": {},
   "app": {
     "windows": [
